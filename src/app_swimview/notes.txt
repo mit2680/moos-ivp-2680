@@ -1,0 +1,23 @@
+
+
+GUI
+
+$ swimview file1.txt file2.txt...
+$ swimview
+
+
+Basic functionality is:
+  Just be able to render a swim file
+  polygon + swimmers (triangles or circles)
+
+Next functionality
+  Able to render one of many swim files, and toggle between
+
+  Fl_Output field: curr_swim_file name
+  Hot-key for toggling through if multiple files
+  maybe: Fl_Output for poly region
+  maybe: Fl_Output for swimmer locations types
+
+
+o GUI should have buttons for switching between swim files
+

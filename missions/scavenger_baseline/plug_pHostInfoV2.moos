@@ -1,0 +1,16 @@
+//--------------------------------------------------
+// pHostInfo configuration block from plugin
+
+ProcessConfig = pHostInfoV2
+{
+  AppTick 	= 1
+  CommsTick 	= 1
+
+#ifdef IP_ADDR
+  demand_hostip = $(IP_ADDR)
+#else
+	prefer_subnet = 192.26.80
+  backup_hostip = localhost
+#endif
+}
+

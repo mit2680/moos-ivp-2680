@@ -1,0 +1,22 @@
+// gen_swimmers --poly=-72,-52:-37,-140:114,-69:77,18 --swimmers=5 --floaters=15 --sep=5
+poly = pts={-72,-52:-37,-140:114,-69:77,18}
+swimmer = type=person, name=p01, x=64.7, y=-39.7
+swimmer = type=person, name=p02, x=4.7, y=-99.4
+swimmer = type=person, name=p03, x=27.3, y=-58.6
+swimmer = type=person, name=p04, x=50.1, y=-91
+swimmer = type=person, name=p05, x=41.2, y=-24
+swimmer = type=floater, name=x01, x=52.3, y=-26.2
+swimmer = type=floater, name=x02, x=-18.8, y=-100.6
+swimmer = type=floater, name=x03, x=-8.6, y=-73.4
+swimmer = type=floater, name=x04, x=-38.5, y=-45.9
+swimmer = type=floater, name=x05, x=76.3, y=1.6
+swimmer = type=floater, name=x06, x=-10.4, y=-126.4
+swimmer = type=floater, name=x07, x=17.1, y=-15.1
+swimmer = type=floater, name=x08, x=57.2, y=-47.1
+swimmer = type=floater, name=x09, x=2.4, y=-52.2
+swimmer = type=floater, name=x10, x=35.9, y=-74.9
+swimmer = type=floater, name=x11, x=51.77, y=-52.93
+swimmer = type=floater, name=x12, x=53.5, y=-39.99
+swimmer = type=floater, name=x13, x=55, y=-6.8
+swimmer = type=floater, name=x14, x=8, y=-42
+swimmer = type=floater, name=x15, x=-6.3, y=-22.3

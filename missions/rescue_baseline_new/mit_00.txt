@@ -1,0 +1,8 @@
+// gen_swimmers --swimmers=5 --pav90 --sep=5
+poly = pts={60,10:-75.5402,-54.2561:-36.9866,-135.58:98.5536,-71.3241}
+swimmer = name=p01, x=41, y=-25
+swimmer = name=p02, x=64, y=-41
+swimmer = name=p03, x=28, y=-60
+swimmer = name=p04, x=50, y=-92
+swimmer = name=p05, x=5, y=-100
+

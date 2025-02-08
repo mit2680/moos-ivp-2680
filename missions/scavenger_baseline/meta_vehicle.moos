@@ -1,0 +1,89 @@
+ServerHost = localhost
+ServerPort = $(MOOS_PORT)
+Community  = $(VNAME)
+
+#include plug_origin_warp.moos
+  
+//------------------------------------------------------------
+Processconfig = ANTLER
+{
+  MSBetweenLaunches = 50
+   
+  Run = MOOSDB             @ NewConsole = false
+  Run = uSimMarineX        @ NewConsole = false
+  Run = pLogger            @ NewConsole = false
+  Run = pNodeReporter      @ NewConsole = false
+
+  Run = pHelmIvP           @ NewConsole = false
+  Run = uProcessWatch      @ NewConsole = false
+  Run = pContactMgrV20     @ NewConsole = false
+  Run = pShare             @ NewConsole = false
+  Run = pHostInfoV2        @ NewConsole = false
+  Run = pScavenger         @ NewConsole = false
+
+  Run = uFldNodeBroker     @ NewConsole = false
+  Run = uFldMessageHandler @ NewConsole = false
+  Run = uTimerScript       @ NewConsole = false
+  Run = pRealm             @ NewConsole = false
+}
+  
+#include plug_uFldNodeBroker.moos
+#include plug_uFldMessageHandler.moos
+#include plug_pShare.moos
+#include plug_pHostInfoV2.moos
+#include plug_pContactMgrV20.moos
+
+#include plug_uSimMarineX.moos
+#include plug_pHelmIvP.moos
+#include plug_pLogger.moos
+#include plug_pNodeReporter.moos
+#include plug_uProcessWatch.moos
+
+//------------------------------------------
+// pScavenger config block
+
+ProcessConfig = pScavenger
+{
+  vname = $(VNAME)
+	visit_radius = 20
+}
+
+//------------------------------------------
+// uTimerScript config block
+
+ProcessConfig = uTimerScript
+{
+  reset_max  = unlimited
+	reset_time = end
+  event      = var=RESCUE_REQUEST, val=vname=$(VNAME), time=1
+}
+
+//------------------------------------------
+// pRealm config block
+
+ProcessConfig = pRealm
+{
+  AppTick   = 4
+  CommsTick = 4
+
+	hist_var = MOB_ALERT
+	hist_var = FOUND_SWIMMER
+	scope_set = name=msgs, vars=MOB_ALERT:FOUND_SWIMMER
+}
+
+//------------------------------------------
+ProcessConfig = pEncircle
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   circle_position = x=75,y=-195,radius=50
+   max_speed = 5
+   aggression = 1
+
+   encircle_active = true
+   consider_thresh = 30
+   on_circle_thresh = 20
+
+   message_color = dodger_blue // or "off"
+}

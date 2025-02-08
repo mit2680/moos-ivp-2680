@@ -1,0 +1,24 @@
+
+// uFldCollisionDetect Config Block
+
+ProcessConfig = uFldCollisionDetect
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  collision_range = 4
+  near_miss_range = 8
+  encounter_range = 20
+
+  encounter_flag = ENCOUNTER = $CPA                             
+  collision_flag = COLLISION = $CPA                             
+  near_miss_flag = NEAR_MISS = vname1=$V1,vname2=$V2,cpa=$CPA   
+
+  //delay_time_to_clear = 100   // seconds
+  //deploy_delay_time   = 5     // seconds
+  pulse_render = true
+  pulse_range  = 20
+  pulse_duration = 10
+
+  //publish_immediately = true
+}

@@ -1,0 +1,18 @@
+// gen_swimmers --mit_big --swimmers=15 --sep=10
+// Lowest dist between swimmers: 11.00
+poly = pts={60,10:-75.5,-54.3:-36.9,-135.6:98.6,-71.3}
+swimmer = name=p01, x=54, y=-71
+swimmer = name=p02, x=-43, y=-96
+swimmer = name=p03, x=-40, y=-55
+swimmer = name=p04, x=71, y=-78
+swimmer = name=p05, x=0, y=-38
+swimmer = name=p06, x=-7, y=-28
+swimmer = name=p07, x=-16, y=-50
+swimmer = name=p08, x=-16, y=-39
+swimmer = name=p09, x=-45, y=-71
+swimmer = name=p10, x=55, y=-39
+swimmer = name=p11, x=-27, y=-92
+swimmer = name=p12, x=12, y=-54
+swimmer = name=p13, x=73, y=-45
+swimmer = name=p14, x=-34, y=-124
+swimmer = name=p15, x=57, y=-91

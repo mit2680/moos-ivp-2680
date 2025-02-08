@@ -1,0 +1,94 @@
+// plugs.moos 
+// (1) The plugs.moos file contains plugs that may be included
+//     in both meta_vehicle.moos and meta_shoreside.moos files.
+// (2) The nsplug utility uses the <tag><block> as a delimeter.
+//     #include plugs.moos <tag> will only include the block
+//     below the matching tag up to another line begining
+//     with <tag>.
+	
+<tag><origin_warp>
+MOOSTimeWarp = $(WARP)
+LatOrigin  = 43.825300 
+LongOrigin = -70.330400 
+
+<tag><pShare>
+//---------------------------------------------------------
+// pShare config block
+
+ProcessConfig = pShare
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  input = route =  $(IP_ADDR):$(PSHARE_PORT)
+}
+
+<tag><pHostInfo>
+//--------------------------------------------------
+// pHostInfo config block
+
+ProcessConfig = pHostInfo
+{
+  AppTick 	= 1
+  CommsTick = 1
+
+#ifdef IP_ADDR
+  default_hostip_force = $(IP_ADDR)
+#endif
+}
+
+<tag><uProcessWatch>
+//--------------------------------------------------------
+// uProcessWatch config block
+
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+  
+	watch_all = true
+  nowatch   = uMAC*
+  nowatch   = uXMS*
+  nowatch   = uPokeDB*
+  nowatch   = uMAC*
+}
+
+<tag><pMarineViewer>
+//--------------------------------------------------------
+// pMarineViewer config block
+
+ProcessConfig = pMarineViewer
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  tiff_file              = forrest19.tif
+  set_pan_x              = -90
+  set_pan_y              = -280
+  zoom                   = 0.65
+  vehicles_shape_scale   = 1.5
+  vehicles_name_mode     = names+shortmode
+  polygon_viewable_labels = false
+
+  // Appcast configuration
+  appcast_height       = 75
+  appcast_width        = 30
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
+  nodes_font_size      = xlarge
+  procs_font_size      = xlarge
+  appcast_font_size    = large
+
+  scope = DB_CLIENTS
+
+  action = STATION_ALL = false
+  action = STATION_ALL = true
+
+  button_one   = DEPLOY  # DEPLOY_ALL=true 
+  button_one   = MOOS_MANUAL_OVERRIDE_ALL=false 
+  button_one   = RETURN_ALL=false
+  button_two   = RETURN  # RETURN_ALL=true
+  button_three = STATION:T  # STATION_ALL=true
+  button_four  = STATION:F  # STATION_ALL=false
+}
+

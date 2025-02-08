@@ -1,0 +1,19 @@
+//--------------------------------------------------------
+// pNodeReporter Configuration Block (Created from Plugin)
+
+ProcessConfig = pNodeReporter
+{
+  AppTick     = 6
+  CommsTick   = 6
+  
+  platform_type = KAYAK
+
+#ifdef ORDER normal
+	platform_color = dodgerblue
+#endif
+
+#ifdef ORDER reversed
+	platform_color = yellow
+#endif
+
+}

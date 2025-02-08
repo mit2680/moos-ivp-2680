@@ -1,0 +1,19 @@
+//--------------------------------------------------------
+// uProcessWatch Configuration Block (Created from Plugin)
+
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  NOWATCH = uMAC*  
+  NOWATCH = uXMS*
+  
+  WATCH  = uSimMarineX
+  WATCH  = pShare*
+  WATCH  = pLogger
+  WATCH  = pNodeReporter
+  WATCH  = pHelmIvP
+}
+
+

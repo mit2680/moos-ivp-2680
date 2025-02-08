@@ -1,0 +1,224 @@
+//*******************************************************
+// ShoreSide Configuration File
+
+ServerHost = localhost
+ServerPort = 9000
+Community  = shoreside
+
+#include plug_origin_warp.moos
+  
+//--------------------------------------------------------
+Processconfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB              @ NewConsole = false
+  Run = pMarineViewer       @ NewConsole = false
+  Run = pLogger             @ NewConsole = false
+
+  Run = pShare              @ NewConsole = false
+  Run = pHostInfoV2         @ NewConsole = false
+  Run = uProcessWatch       @ NewConsole = false
+  Run = uFldShoreBroker     @ NewConsole = false
+  Run = uFldNodeComms       @ NewConsole = false
+  Run = uFldCollisionDetect @ NewConsole = false
+  Run = pRealm              @ NewConsole = false
+  Run = uFldRescueMgr       @ NewConsole = false
+}
+
+#include plug_pHostInfoV2.moos
+#include plug_pShare.moos
+#include plug_uFldCollisionDetect.moos
+
+//------------------------------------------
+// pRealm config block
+
+ProcessConfig = pRealm                                          
+{                                                               
+  AppTick   = 4
+  CommsTick = 4
+  
+  relcast_interval = 0.8
+  summary_interval = 2.0
+  wrap_length = 90
+  trunc_length = 270
+  msg_max_hist = 30
+                                                                
+  hist_var  = SWIMMER_ALERT_ABE
+  hist_var  = SWIMMER_ALERT_BEN
+                                                                
+	app_logging = true
+}
+	
+//------------------------------------------
+// uProcessWatch config block
+
+ProcessConfig = uProcessWatch                                   
+{                                                               
+  AppTick   = 4                                                 
+  CommsTick = 4  
+
+	watch_all = true
+	nowatch   = uXMS*
+	nowatch   = uMAC*
+	summary_wait = 5
+}
+
+//------------------------------------------
+// uFldRescueMgr config block
+
+ProcessConfig = uFldRescueMgr
+{
+  AppTick   = 4
+  CommsTick = 4
+
+	app_logging = true
+
+	swim_file = mit_02.txt
+	
+	rescue_rng_min = 10
+	rescue_rng_max = 20
+	rescue_rng_pd  = 0.05
+
+	show_rescue_rng = true
+	rescue_rng_transparency = 0.2
+}
+
+//------------------------------------------
+// uFldManOverboard config block
+
+ProcessConfig = uFldManOverboard
+{
+  AppTick   = 4
+  CommsTick = 4
+
+	app_logging = true
+
+	swim_file = mit_01.txt
+	//swimmer_sep = 5
+	//swimmers = 5
+	//drop_circle = x=50, y=-50, rad=20, pts=8
+	//drop_region = pts={20,-50 : 20,-100 : 75,-100 : 75,-50},label=dropzone
+
+	show_region = true
+}
+
+	
+//--------------------------------------------------
+// uFldNodeComms Configuration Block
+
+ProcessConfig = uFldNodeComms
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  comms_range      = 500
+  critical_range   = 40
+  min_msg_interval = 0
+  max_msg_length   = 1000
+  view_node_rpt_pulses = true
+}
+
+//--------------------------------------------------
+// uFldShoreBroker Configuration Block
+
+ProcessConfig = uFldShoreBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  qbridge = DEPLOY, NODE_REPORT, NODE_MESSAGE
+  qbridge = STATION_KEEP, APPCAST_REQ, SWIMMER_ALERT
+  qbridge = MOOS_MANUAL_OVERIDE, SURVEY, WPT_UPDATE
+  
+  bridge  = src=AVOID, alias=AVOID
+ 
+  bridge  = src=RETURN_ALL, alias=RETURN
+  bridge  = src=RETURN_$V,  alias=RETURN
+}
+
+//--------------------------------------------------
+// pLogger Configuration Block
+
+ProcessConfig = pLogger
+{
+  AppTick       = 10
+  CommsTick     = 10
+  
+  File          = XLOG_SHORESIDE
+  PATH          = ./
+  AsyncLog      = true
+  FileTimeStamp = true
+
+	Log = MOB_ALERT @ 0 nosync
+	
+  // Log it all!!!!!
+  WildCardLogging = true 
+}
+
+
+//--------------------------------------------------------
+ProcessConfig = pMarineViewer
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  //tiff_file            = forrest19.tif
+  tiff_file            = MIT_SP.tif
+  set_pan_x            = 6
+  set_pan_y            = -80
+  zoom                 = 0.95
+  vehicles_shape_scale = 1.5
+  vehicles_name_mode   = names+shortmode
+
+	procs_font_size = xlarge
+	nodes_font_size = xlarge
+	infocast_font_size = large
+	
+  polygon_viewable_all    = true
+  polygon_viewable_labels = false
+  seglist_viewable_all    = false
+  seglist_viewable_labels = false
+  point_viewable_all    = true
+  point_viewable_labels = false
+
+  left_context[person]  = SWIMMER_ALERT = type=person,x=$[XPOS],y=$[YPOS]	
+
+  right_context[floater] = SWIMMER_ALERT = type=floater,x=$[XPOS],y=$[YPOS]	
+
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
+
+  action = menu_key=abe # DEPLOY_ABE=true
+  action = menu_key=abe # MOOS_MANUAL_OVERIDE_ABE=false
+  action = menu_key=abe # RETURN_ABE=false
+  action = menu_key=abe # LOITER_ABE=true
+
+  action = menu_key=ben # DEPLOY_BEN=true
+  action = menu_key=ben # MOOS_MANUAL_OVERIDE_BEN=false
+  action = menu_key=ben # RETURN_BEN=false
+  action = menu_key=ben # LOITER_BEN=true
+
+  comms_pulse_viewable_all = true
+  range_pulse_viewable_all = false
+  node_pulse_viewable_all  = false
+
+  vehicles_name_mode = names
+
+  stale_report_thresh = 2
+  stale_remove_thresh = 20000
+
+  button_one   = DEPLOY  # DEPLOY_ALL=true 
+  button_one   = DEPLOY  # MOOS_MANUAL_OVERIDE_ALL=false 
+  button_one   = RETURN_ALL=false # SURVEY_ALL=true
+  button_one   = STATION_KEEP_ALL=false 
+
+  button_two   = ENCIRCLE:Y  # ENCIRCLE_ACTIVE_ALL=true
+  button_four  = ENCIRCLE:N  # ENCIRCLE_ACTIVE_ALL=false
+  button_three = RETURN  # RETURN_ALL=true # LOITER_ALL=false
+
+  button_five  = SHOW-OBJ  # URM_SHOW_OBJECTS=true
+  button_six   = HIDE-OBJ  # URM_SHOW_OBJECTS=false
+
+	}
+

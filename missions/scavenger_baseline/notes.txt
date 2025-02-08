@@ -1,0 +1,63 @@
+
+
+Big Issue #1
+=========================================================
+o RECAP: the task behavior posts crucial info upon helm start, namely
+  the alert requests to the task manager. If the task manager starts
+  late than the helm, it will miss all alert requests beyond the last
+  one posted. The hack for now is to launch the task manager earlier
+  in the Antler block.
+
+o The helm (BehaviorSet) should scan the behavior specs, or all
+  behaviors during the startup spawn phase, for all Task behaviors and
+  get the (task_type, update_var) pair.
+
+o The helm should monitor DB_CLIENTS until it sees pTaskManager on the
+  list, and then post all the TM_ALERT_REQUEST messages for the task
+  manager.
+
+o Ideally the name of the task manager app should be configureable,
+  but default to pTaskManager, in case someone wants to build a
+  different task manager later on.
+
+
+postWaitMessage("FOO", 23, pTaskManager)
+
+  
+
+Big Issue #2
+========================================================
+o RECAP: The helm, when reading the behavior file up on startup, will
+  treat the '#' char as a comment delimiter. Not just on the beginning
+  of the line, but in-line as well. This makes it impossible to have
+  an updates posting as part of an endflag because they are of the
+  form "name=henry # speed=2.3". Currently everything to the right of
+  the '#' char is chopped off. The hack for now is to comment out this
+  feature in the source code, Populator_BehaviorSet.cpp, around line
+  226. This cannot be the fix however since it may break other
+  people's missions.
+
+o Possible fix 1: support escaped hashes like \# when reading the file
+
+o Possible fix 2: support additional delimiters for updates, like '$',
+  but this may break other people's mission files or updates posted
+  from other apps
+
+o Possile fix 3: Allow the helm to be optionally configured to ignore
+  '#' as a comment delimeter
+
+o Probably fix 1 is best
+
+
+Big Issue #3
+=========================================================
+o RECAP: when a vehicle generates a mission task like "follow me",
+  there is currently no easy way to convey the end of this task to the
+  following vehicle.
+
+
+Big Issue #4
+=========================================================
+o RECAP: The Leader behavior does not regulate its speed to maintain
+  a desired position to the lead vehicle.
+

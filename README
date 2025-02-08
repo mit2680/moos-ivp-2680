@@ -1,0 +1,67 @@
+##############################################################################
+# FILE:        moos-ivp-2680/README
+# DATE:        May 2023
+# DESCRIPTION: Contains info regarding the moos-ivp-2680 repository.
+##############################################################################
+
+#=============================================================================
+# Introduction
+#=============================================================================
+The moos-ivp-2680 repository contains code and missions for use in the MIT
+Class 2.680 Marine Autonomy, Sensing and Communications.
+
+#=============================================================================
+# Directory Structure
+#=============================================================================
+The directory structure for the moos-ivp-extend is decribed below:
+
+bin              - Directory for generated executable files
+build            - Directory for build object files
+build.sh         - Script for building moos-ivp-extend
+CMakeLists.txt   - CMake configuration file for the project
+data             - Directory for storing data
+lib              - Directory for generated library files
+missions         - Directory for mission files
+README           - Contains helpful information - (this file).
+scripts          - Directory for script files
+src              - Directory for source code
+
+#=============================================================================
+# Build Instructions
+#=============================================================================
+#--------------------
+# Linux and Mac Users
+#--------------------
+
+To build on Linux and Apple platforms, execute the build script within this
+directory:
+
+   $ ./build.sh
+
+To build without using the supplied script, execute the following commands
+within this directory:
+
+   $ mkdir -p build
+   $ cd build
+   $ cmake ../
+   $ make
+   $ cd ..
+
+#--------------
+# Windows Users
+#--------------
+Windows is not supported for the 2.680 codebase
+
+#=============================================================================
+# Environment variables
+#=============================================================================
+The moos-ivp-2680 binaries files should be added to your path to allow them
+to be launched from pAntler. 
+
+For IvP Behaviors to be recognized by the IvP Helm, you should add the library
+directory to the "IVP_BEHAVIOR_DIRS" environment variable.
+
+##############################################################################
+#                               END of README
+##############################################################################
+
