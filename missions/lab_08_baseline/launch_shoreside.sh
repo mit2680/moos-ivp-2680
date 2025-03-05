@@ -6,11 +6,10 @@
 #  Part 1: Set global var defaults
 #----------------------------------------------------------
 ME=`basename "$0"`
+CMD_ARGS=""
 TIME_WARP=1
 JUST_MAKE="no"
 VERBOSE=""
-CONFIRM="yes"
-CMD_ARGS=""
 
 IP_ADDR="localhost"
 MOOS_PORT="9000"
@@ -22,16 +21,13 @@ PSHARE_PORT="9200"
 for ARGI; do
     CMD_ARGS+="${ARGI} "
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ]; then
-	echo "$ME [SWITCHES] [WARP]         "
-	echo "  --help, -h                                  " 
-	echo "    Display this help message                 "
-	echo "  --just_make, -j                             " 
-	echo "    Just make targ files, but do not launch   "
-        echo "  --verbose, -v                               "
-        echo "    Increase verbosity                        "
-	echo "  --nc,-nc                                       " 
-	echo "    No confirmation before launching             "
-	echo "                                              "
+	echo "$ME [OPTIONS] [time_warp]                        "
+        echo "                                                 "
+        echo "Options:                                         "
+        echo "  --help, -h             Show this help message  "
+        echo "  --just_make, -j        Only create targ files  "
+        echo "  --verbose, -v          Verbose, confirm launch "
+	echo "                                                 "
 	echo "  --ip=<localhost>                            " 
 	echo "    Force pHostInfo to use this IP Address    "
 	echo "  --mport=<9000>                              "
@@ -45,8 +41,6 @@ for ARGI; do
 	JUST_MAKE="yes"
     elif [ "${ARGI}" = "--verbose" -o "${ARGI}" = "-v" ]; then
 	VERBOSE="yes"
-    elif [ "${ARGI}" = "--nc" -o "${ARGI}" = "-nc" ]; then
-	CONFIRM="no"
 
     elif [ "${ARGI:0:5}" = "--ip=" ]; then
         IP_ADDR="${ARGI#--ip=*}"
@@ -61,13 +55,18 @@ for ARGI; do
 done
 
 
-if [ "${VERBOSE}" = "yes" -o "${CONFIRM}" = "yes" ]; then 
-    echo "$ME"
-    echo "CMD_ARGS =    [${CMD_ARGS}]"
-    echo "TIME_WARP =   [${TIME_WARP}]"
-    echo "MOOS_PORT =   [${MOOS_PORT}]"
-    echo "PSHARE_PORT = [${PSHARE_PORT}]"
-    echo "IP_ADDR =     [${IP_ADDR}]"
+if [ "${VERBOSE}" = "yes" ]; then 
+    echo "=================================="
+    echo "  launch_shoreside.sh SUMMARY     "
+    echo "=================================="
+    echo "$ME                               "
+    echo "CMD_ARGS =      [${CMD_ARGS}]     "
+    echo "TIME_WARP =     [${TIME_WARP}]    "
+    echo "JUST_MAKE =     [${JUST_MAKE}]    "
+    echo "----------------------------------"
+    echo "IP_ADDR =       [${IP_ADDR}]      "
+    echo "MOOS_PORT =     [${MOOS_PORT}]    "
+    echo "PSHARE_PORT =   [${PSHARE_PORT}]  "
     echo -n "Hit any key to continue with launching"
     read ANSWER
 fi

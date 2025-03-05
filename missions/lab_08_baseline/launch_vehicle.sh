@@ -6,7 +6,9 @@
 #  Part 1: Set global var defaults
 #----------------------------------------------------------
 ME=`basename "$0"`
+CMD_ARGS=""
 TIME_WARP=1
+VERBOSE=""
 JUST_MAKE="no"
 VNAME=$(id -un)
 
@@ -15,8 +17,8 @@ MOOS_PORT="9001"
 PSHARE_PORT="9201"
 SHORE_PSHARE="9200"
 SHORE_IP="localhost"
+
 GUI="yes"
-CONF="yes"
 AUTO="no"
 
 # Generate a random start position in range x=[0,180], y=[0,-50]
@@ -33,12 +35,15 @@ LOITER_POS="x=$X_LOITER_POS,y=$Y_LOITER_POS"
 #  Part 2: Check for and handle command-line arguments
 #-------------------------------------------------------
 for ARGI; do
+    CMD_ARGS+=" ${ARGI}"
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ]; then
-	echo "$ME [SWITCHES]                                   "
-	echo "  --help, -h                                     " 
-	echo "    Display this help message                    "
-	echo "  --just_make, -j                                " 
-	echo "    Just make targ files, but do not launch      "
+	echo "$ME [OPTIONS] [time_warp]                        "
+        echo "                                                 "
+        echo "Options:                                         "
+        echo "  --help, -h             Show this help message  "
+        echo "  --just_make, -j        Only create targ files  "
+        echo "  --verbose, -v          Verbose, confirm launch "
+	echo "                                                 "
 	echo "  --vname=<vname>                                " 
 	echo "    Name of the vehicle being launched           " 
 	echo "                                                 "
@@ -56,15 +61,13 @@ for ARGI; do
 	echo "    Do not launch pMarineViewer GUI with vehicle "
 	echo "  --auto,-a                                      " 
 	echo "    Exit after launching. Do not launch uMAC     "
-	echo "  --nc,-nc                                       " 
-	echo "    No confirmation before launching             "
 	exit 0
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then 
         TIME_WARP=$ARGI
+    elif [ "${ARGI}" = "--verbose" -o "${ARGI}" = "-v" ]; then
+        VERBOSE="yes"
     elif [ "${ARGI}" = "--just_make" -o "${ARGI}" = "-j" ]; then
 	JUST_MAKE="yes"
-    elif [ "${ARGI}" = "--nc" -o "${ARGI}" = "-nc" ]; then
-	CONF="no"
     elif [ "${ARGI}" = "--auto" -o "${ARGI}" = "-a" ]; then
 	AUTO="yes"
     elif [ "${ARGI:0:8}" = "--shore=" ]; then
@@ -90,19 +93,28 @@ done
 # Set the FULL_NAME after possibly overriding VNAME in command args
 FULL_VNAME=$VNAME
 
-if [ "${CONF}" = "yes" ]; then 
-    echo "PSHARE_PORT =  [${PSHARE_PORT}]"
-    echo "MOOS_PORT =    [${MOOS_PORT}]"
-    echo "IP_ADDR =      [${IP_ADDR}]"
-    echo "VNAME =        [${VNAME}]"
-    echo "SHORE_IP =     [${SHORE_IP}]"
-    echo "SHORE_PSHARE = [${SHORE_PSHARE}]"
-    echo "TIME_WARP =    [${TIME_WARP}]"
-    echo "GUI =          [${GUI}]"
-    echo "UMAC =         [${UMAC}]"
-    echo "FULL_NAME =    [${FULL_NAME}]"
-    echo "START_POS =    [${START_POS}]"
-    echo "LOITER_POS =   [${LOITER_POS}]"
+if [ "${VERBOSE}" = "yes" ]; then
+    echo "============================================"
+    echo "     launch_vehicle.sh SUMMARY        $VNAME"
+    echo "============================================"
+    echo "$ME                               "
+    echo "CMD_ARGS =     [${CMD_ARGS}]      "
+    echo "TIME_WARP =    [${TIME_WARP}]     "
+    echo "JUST_MAKE =    [${JUST_MAKE}]     "
+    echo "----------------------------------"
+    echo "IP_ADDR =      [${IP_ADDR}]       "
+    echo "MOOS_PORT =    [${MOOS_PORT}]     "
+    echo "PSHARE_PORT =  [${PSHARE_PORT}]   "
+    echo "SHORE_IP =     [${SHORE_IP}]      "
+    echo "SHORE_PSHARE = [${SHORE_PSHARE}]  "
+    echo "----------------------------------"
+    echo "VNAME =        [${VNAME}]         "
+    echo "GUI =          [${GUI}]           "
+    echo "UMAC =         [${UMAC}]          "
+    echo "FULL_NAME =    [${FULL_NAME}]     "
+    echo "------------Custom----------------"
+    echo "START_POS =    [${START_POS}]     "
+    echo "LOITER_POS =   [${LOITER_POS}]    "
     echo -n "Hit any key to continue with launching"
     read ANSWER
 fi
