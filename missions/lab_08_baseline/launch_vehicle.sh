@@ -1,66 +1,74 @@
 #!/bin/bash 
-#-------------------------------------------------------
+#------------------------------------------------------------
 #   Script: launch_vehicle.sh                       
 #  Mission: lab_08_baseline
-#-------------------------------------------------------
-#  Part 1: Set global var defaults
-#----------------------------------------------------------
+#   LastEd: Mar 11 2025
+#------------------------------------------------------------
+#  Part 1: Set convenience functions for producing terminal
+#          debugging output, and catching SIGINT (ctrl-c).
+#------------------------------------------------------------
+vecho() { if [ "$VERBOSE" != "" ]; then echo "$ME: $1"; fi }
+on_exit() { echo; echo "$ME: Halting all apps"; kill -- -$$; }
+trap on_exit SIGINT
+trap on_exit SIGTERM
+
+#------------------------------------------------------------
+#  Part 2: Declare global var defaults
+#------------------------------------------------------------
 ME=`basename "$0"`
 CMD_ARGS=""
 TIME_WARP=1
 VERBOSE=""
-JUST_MAKE="no"
-VNAME=$(id -un)
+JUST_MAKE=""
+LOG_CLEAN="no"
+AUTO_LAUNCHED="no"
 
 IP_ADDR="localhost"
 MOOS_PORT="9001"
 PSHARE_PORT="9201"
-SHORE_PSHARE="9200"
 SHORE_IP="localhost"
+SHORE_PSHARE="9200"
+MMOD=""
 
-GUI="yes"
-AUTO="no"
+VNAME=$(id -un)
+COLOR="yellow"
+XMODE="M300"
+START_POS="x=0,y=0,heading=0"  
+STOCK_SPD="1.4"
+MAX_SPD="2"
 
-# Generate a random start position in range x=[0,180], y=[0,-50]
-X_START_POS=$(($RANDOM % 180))
-Y_START_POS=$((($RANDOM % 50)  - 50))
-START_POS="$X_START_POS,$Y_START_POS" 
+# Custom
 
-# Generate a random start position in range x=[0,180], y=[0,-125]
-X_LOITER_POS=$(($RANDOM % 180))
-Y_LOITER_POS=$((($RANDOM % 50) - 125))
-LOITER_POS="x=$X_LOITER_POS,y=$Y_LOITER_POS" 
-
-#-------------------------------------------------------
-#  Part 2: Check for and handle command-line arguments
-#-------------------------------------------------------
+#------------------------------------------------------------
+#  Part 3: Check for and handle command-line arguments
+#------------------------------------------------------------
 for ARGI; do
     CMD_ARGS+=" ${ARGI}"
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ]; then
 	echo "$ME [OPTIONS] [time_warp]                        "
-        echo "                                                 "
-        echo "Options:                                         "
-        echo "  --help, -h             Show this help message  "
-        echo "  --just_make, -j        Only create targ files  "
-        echo "  --verbose, -v          Verbose, confirm launch "
+	echo "                                                 " 
+	echo "Options:                                         "
+	echo "  --help, -h             Show this help message  "
+	echo "  --just_make, -j        Only create targ files  "
+	echo "  --verbose, -v          Verbose, confirm launch "
+	echo "  --log_clean, -lc       Run clean.sh bef launch "
+        echo "  --auto, -a             Script launch, no uMAC  "
 	echo "                                                 "
-	echo "  --vname=<vname>                                " 
-	echo "    Name of the vehicle being launched           " 
+	echo "  --ip=<localhost>       Veh Default IP addr     "
+	echo "  --mport=<9001>         Veh MOOSDB port         "
+	echo "  --pshare=<9201>        Veh pShare listen port  "
+	echo "  --shore=<localhost>    Shoreside IP to try     "
+	echo "  --shore_pshare=<9200>  Shoreside pShare port   "
+        echo "  --mmod=<mod>           Mission variation/mod   "
 	echo "                                                 "
-	echo "  --shore=<ipaddr>                               "
-	echo "  --shoreip=<ipaddr>                             "
-	echo "    IP address of the shoreside                  "
+	echo "  --vname=<abe>          Veh name given          "
+	echo "  --color=<yellow>       Veh color given         "
+	echo "  --sim, -s              Sim, not fld vehicle    "
+	echo "  --start_pos=<X,Y,Hdg>  Sim start pos/hdg       "
+	echo "  --stock_spd=<m/s>      Default vehicle speed   "
+	echo "  --max_spd=<m/s>        Max Sim and Helm speed  "
 	echo "                                                 "
-	echo "  --mport=<port>(9001)                           "
-	echo "    Port number of this vehicle's MOOSDB port    "
-	echo "  --pshare=<port>(9201)                          " 
-	echo "    Port number of this vehicle's pShare port    "
-	echo "  --ip=<ipaddr>                                  " 
-	echo "    Force pHostInfo to use this IP Address       "
-	echo "  --nogui                                        " 
-	echo "    Do not launch pMarineViewer GUI with vehicle "
-	echo "  --auto,-a                                      " 
-	echo "    Exit after launching. Do not launch uMAC     "
+	echo "Options (custom):                                "
 	exit 0
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then 
         TIME_WARP=$ARGI
@@ -68,90 +76,144 @@ for ARGI; do
         VERBOSE="yes"
     elif [ "${ARGI}" = "--just_make" -o "${ARGI}" = "-j" ]; then
 	JUST_MAKE="yes"
+    elif [ "${ARGI}" = "--log_clean" -o "${ARGI}" = "-lc" ]; then
+	LOG_CLEAN="yes"
     elif [ "${ARGI}" = "--auto" -o "${ARGI}" = "-a" ]; then
-	AUTO="yes"
-    elif [ "${ARGI:0:8}" = "--shore=" ]; then
-	SHORE_IP="${ARGI#--shore=*}"
-    elif [ "${ARGI:0:10}" = "--shoreip=" ]; then
-	SHORE_IP="${ARGI#--shoreip=*}"
+        AUTO_LAUNCHED="yes" 
+
     elif [ "${ARGI:0:5}" = "--ip=" ]; then
         IP_ADDR="${ARGI#--ip=*}"
-    elif [ "${ARGI:0:8}" = "--mport=" ]; then
+    elif [ "${ARGI:0:7}" = "--mport" ]; then
 	MOOS_PORT="${ARGI#--mport=*}"
     elif [ "${ARGI:0:9}" = "--pshare=" ]; then
-	PSHARE_PORT="${ARGI#--pshare=*}"
+        PSHARE_PORT="${ARGI#--pshare=*}"
+    elif [ "${ARGI:0:8}" = "--shore=" ]; then
+        SHORE_IP="${ARGI#--shore=*}"
+    elif [ "${ARGI:0:15}" = "--shore_pshare=" ]; then
+        SHORE_PSHARE="${ARGI#--shore_pshare=*}"
+    elif [ "${ARGI:0:7}" = "--mmod=" ]; then
+        MMOD="${ARGI#--mmod=*}"
+
     elif [ "${ARGI:0:8}" = "--vname=" ]; then
-	VNAME="${ARGI#--vname=*}"
-    elif [ "${ARGI}" = "--nogui" ]; then
-	GUI="no"
-    else
-	echo "$ME: Bad Arg:" ${ARGI} " Exit Code 1"
+        VNAME="${ARGI#--vname=*}"
+    elif [ "${ARGI:0:8}" = "--color=" ]; then
+        COLOR="${ARGI#--color=*}"
+    elif [ "${ARGI}" = "--sim" -o "${ARGI}" = "-s" ]; then
+        XMODE="SIM"
+    elif [ "${ARGI:0:12}" = "--start_pos=" ]; then
+        START_POS="${ARGI#--start_pos=*}"
+    elif [ "${ARGI:0:12}" = "--stock_spd=" ]; then
+        STOCK_SPD="${ARGI#--stock_spd=*}"
+    elif [ "${ARGI:0:10}" = "--max_spd=" ]; then
+        MAX_SPD="${ARGI#--max_spd=*}"
+
+    else 
+	echo "$ME: Bad Arg:[$ARGI]. Exit Code 1."
 	exit 1
     fi
 done
 
-# Set the FULL_NAME after possibly overriding VNAME in command args
-FULL_VNAME=$VNAME
 
-if [ "${VERBOSE}" = "yes" ]; then
+#------------------------------------------------------------
+#  Part 4: If Heron hardware, set key info based on IP address
+#------------------------------------------------------------
+if [ "${XMODE}" = "M300" ]; then
+    COLOR=`get_heron_info.sh --color --hint=$COLOR`
+    IP_ADDR=`get_heron_info.sh --ip`
+    FSEAT_IP=`get_heron_info.sh --fseat`
+    VNAME=`get_heron_info.sh --name`
+    if [ $? != 0 ]; then
+	echo "$ME: Problem getting Heron Info. Exit Code 2"
+	exit 2
+    fi
+fi
+     
+#------------------------------------------------------------
+#  Part 5: If verbose, show vars and confirm before launching
+#------------------------------------------------------------
+if [ "${VERBOSE}" = "yes" ]; then 
     echo "============================================"
     echo "     launch_vehicle.sh SUMMARY        $VNAME"
     echo "============================================"
     echo "$ME                               "
-    echo "CMD_ARGS =     [${CMD_ARGS}]      "
-    echo "TIME_WARP =    [${TIME_WARP}]     "
-    echo "JUST_MAKE =    [${JUST_MAKE}]     "
+    echo "CMD_ARGS =      [${CMD_ARGS}]     "
+    echo "TIME_WARP =     [${TIME_WARP}]    "
+    echo "JUST_MAKE =     [${JUST_MAKE}]    "
+    echo "AUTO_LAUNCHED = [${AUTO_LAUNCHED}]"
+    echo "LOG_CLEAN =     [${LOG_CLEAN}]    "
     echo "----------------------------------"
-    echo "IP_ADDR =      [${IP_ADDR}]       "
-    echo "MOOS_PORT =    [${MOOS_PORT}]     "
-    echo "PSHARE_PORT =  [${PSHARE_PORT}]   "
-    echo "SHORE_IP =     [${SHORE_IP}]      "
-    echo "SHORE_PSHARE = [${SHORE_PSHARE}]  "
+    echo "IP_ADDR =       [${IP_ADDR}]      "
+    echo "MOOS_PORT =     [${MOOS_PORT}]    "
+    echo "PSHARE_PORT =   [${PSHARE_PORT}]  "
+    echo "SHORE_IP =      [${SHORE_IP}]     "
+    echo "SHORE_PSHARE =  [${SHORE_PSHARE}] "
+    echo "MMOD =          [${MMOD}]         "
     echo "----------------------------------"
-    echo "VNAME =        [${VNAME}]         "
-    echo "GUI =          [${GUI}]           "
-    echo "UMAC =         [${UMAC}]          "
-    echo "FULL_NAME =    [${FULL_NAME}]     "
+    echo "VNAME =         [${VNAME}]        "
+    echo "COLOR =         [${COLOR}]        "
+    echo "XMODE =         [${XMODE}]        "
+    echo "------------Sim-------------------"
+    echo "START_POS =     [${START_POS}]    "
+    echo "STOCK_SPD =     [${STOCK_SPD}]    "
+    echo "MAX_SPD =       [${MAX_SPD}]      "
+    echo "------------Fld-------------------"
+    echo "FSEAT_IP =      [${FSEAT_IP}]     "
     echo "------------Custom----------------"
-    echo "START_POS =    [${START_POS}]     "
-    echo "LOITER_POS =   [${LOITER_POS}]    "
-    echo -n "Hit any key to continue with launching"
+    echo -n "Hit any key to continue launching $VNAME "
     read ANSWER
 fi
 
-#-------------------------------------------------------
-#  Part 3: Create the .moos and .bhv files. 
-#-------------------------------------------------------
-nsplug meta_vehicle.moos targ_$FULL_VNAME.moos -f WARP=$TIME_WARP  \
-    PSHARE_PORT=$PSHARE_PORT     VNAME=$FULL_VNAME                 \
-    START_POS=$START_POS         SHORE_IP=$SHORE_IP                \
-    SHORE_PSHARE=$SHORE_PSHARE   VPORT=$MOOS_PORT                  \
-    IP_ADDR=$IP_ADDR             GUI=$GUI
+#------------------------------------------------------------
+#  Part 6: If Log clean before launch, do it now. 
+#------------------------------------------------------------
+if [ "$LOG_CLEAN" = "yes" -a -f "clean.sh" ]; then
+    vecho "Cleaning local Log Files"
+    ./clean.sh
+fi
 
-nsplug meta_vehicle.bhv targ_$FULL_VNAME.bhv -f VNAME=$FULL_VNAME  \
-    START_POS=$START_POS LOITER_POS=$LOITER_POS       
-   
- 
-if [ ${JUST_MAKE} = "yes" ]; then
+#------------------------------------------------------------
+#  Part 7: Create the .moos and .bhv files. 
+#------------------------------------------------------------
+NSFLAGS="--strict --force"
+if [ "${AUTO_LAUNCHED}" = "no" ]; then
+    NSFLAGS="--interactive --force"
+fi
+
+nsplug meta_vehicle.moos targ_$VNAME.moos $NSFLAGS WARP=$TIME_WARP \
+       IP_ADDR=$IP_ADDR             MOOS_PORT=$MOOS_PORT \
+       PSHARE_PORT=$PSHARE_PORT     SHORE_IP=$SHORE_IP   \
+       SHORE_PSHARE=$SHORE_PSHARE   VNAME=$VNAME         \
+       COLOR=$COLOR                 XMODE=$XMODE         \
+       START_POS=$START_POS         MAX_SPD=$MAX_SPD     \
+       MMOD=$MMOD                                        \
+       FSEAT_IP=$FSEAT_IP
+
+nsplug meta_vehicle.bhv targ_$VNAME.bhv $NSFLAGS         \
+       START_POS=$START_POS         VNAME=$VNAME         \
+       STOCK_SPD=$STOCK_SPD         MMOD=$MMOD           \
+
+if [ "${JUST_MAKE}" = "yes" ]; then
+    echo "$ME: Targ files made; exiting without launch."
     exit 0
 fi
 
-#-------------------------------------------------------
-#  Part 4: Launch the processes
-#-------------------------------------------------------
-printf "Launching $VNAME MOOS Community (WARP=%s) \n" $TIME_WARP
-pAntler targ_$FULL_VNAME.moos >& /dev/null &
+#------------------------------------------------------------
+#  Part 8: Launch the vehicle mission
+#------------------------------------------------------------
+echo "Launching $VNAME MOOS Community. WARP="$TIME_WARP
+pAntler targ_$VNAME.moos >& /dev/null &
+echo "Done Launching $VNAME MOOS Community"
 
-#-------------------------------------------------------
-#  Part 5: If launched from script, we're done, exit now
-#-------------------------------------------------------
-if [ "${AUTO}" = "yes" ]; then
+#------------------------------------------------------------
+#  Part 9: If launched from script, we're done, exit now
+#------------------------------------------------------------
+if [ "${AUTO_LAUNCHED}" = "yes" ]; then
     exit 0
 fi
 
-uMAC targ_$FULL_VNAME.moos
-
-#-------------------------------------------------------
-#  Part 6: Exiting and/or killing the simulation
-#-------------------------------------------------------
+#------------------------------------------------------------
+# Part 10: Launch uMAC until the mission is quit
+#------------------------------------------------------------
+uMAC targ_$VNAME.moos
+trap "" SIGINT
 kill -- -$$

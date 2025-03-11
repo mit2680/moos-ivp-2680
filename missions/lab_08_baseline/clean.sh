@@ -1,8 +1,10 @@
 #!/bin/bash 
-#-------------------------------------------------------
-#   Script: clean.sh                       
-#-------------------------------------------------------
-#  Part 1: Set global var defaults
+#--------------------------------------------------------------
+#   Script: clean.sh                                    
+#   Author: Michael Benjamin  
+#     Date: June 2020     
+#----------------------------------------------------------
+#  Part 1: Declare global var defaults
 #----------------------------------------------------------
 VERBOSE=""
 
@@ -11,14 +13,14 @@ VERBOSE=""
 #-------------------------------------------------------
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	echo "%s [SWITCHES]                       "
-	echo "  --verbose                         " 
-	echo "  --help, -h                        " 
+	echo "clean.sh [SWITCHES]        "
+	echo "  --verbose                " 
+	echo "  --help, -h               " 
 	exit 0;	
     elif [ "${ARGI}" = "--verbose" -o "${ARGI}" = "-v" ] ; then
 	VERBOSE="-v"
     else 
-	printf "clean.sh Bad Arg:" $ARGI "Exit code 1"
+	echo "clean.sh: Bad Arg:[$ARGI]. Exit Code 1."
 	exit 1
     fi
 done
@@ -26,6 +28,12 @@ done
 #-------------------------------------------------------
 #  Part 3: Do the cleaning!
 #-------------------------------------------------------
-rm -rf  $VERBOSE  MOOSLog_*  LOG_*  XLOG_* 
-rm -f   $VERBOSE  *~  targ_* *.moos++
-rm -f   $VERBOSE  .LastOpenedMOOSLogDirectory
+if [ "${VERBOSE}" = "-v" ]; then
+    echo "Cleaning: $PWD"
+fi
+rm -rf  $VERBOSE   MOOSLog_*  XLOG_* LOG_* 
+rm -f   $VERBOSE   *~  *.moos++
+rm -f   $VERBOSE   targ_* tmp_*
+rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
+rm -f   $VERBOSE   .mem_info* vloiterpos.txt vpositions.txt
+rm -f   $VERBOSE   vnames.txt vcolors.txt vcolors.txt vspeeds.txt

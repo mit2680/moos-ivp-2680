@@ -2,7 +2,7 @@
 // ShoreSide Configuration File
 
 ServerHost = localhost
-ServerPort = $(MOOS_PORT)
+ServerPort = 9000
 Community  = shoreside
 
 #include plugs.moos <origin_warp>
@@ -18,11 +18,13 @@ Processconfig = ANTLER
   Run = pLogger         @ NewConsole = false
   Run = pHostInfo       @ NewConsole = false
   Run = pShare          @ NewConsole = false
+  Run = uProcessWatch   @ NewConsole = false
   Run = uFldShoreBroker @ NewConsole = false
 }
 
-#include plugs.moos <pShare>
 #include plugs.moos <pHostInfo>
+#include plugs.moos <pShare>
+#include plugs.moos <uProcessWatch>
 
 //--------------------------------------------------
 // uFldShoreBroker config block

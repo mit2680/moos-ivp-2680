@@ -1,5 +1,5 @@
 ServerHost = localhost
-ServerPort = $(VPORT)
+ServerPort = $(MOOS_PORT)
 Community  = $(VNAME)
 
 #include plugs.moos <origin_warp>
@@ -10,30 +10,66 @@ Processconfig = ANTLER
   MSBetweenLaunches = 200
    
   Run = MOOSDB             @ NewConsole = false
-  Run = pRealm             @ NewConsole = false
-  Run = uSimMarineV22      @ NewConsole = false
+  Run = uProcessWatch      @ NewConsole = false
   Run = pShare             @ NewConsole = false
   Run = pLogger            @ NewConsole = false
   Run = pNodeReporter      @ NewConsole = false
   Run = pMarinePIDV22      @ NewConsole = false
   Run = pHelmIvP           @ NewConsole = false
-  Run = uProcessWatch      @ NewConsole = false
   Run = pHostInfo          @ NewConsole = false
   Run = uFldNodeBroker     @ NewConsole = false
-#ifdef GUI yes
-	Run = pMarineViewer      @ NewConsole = false
+  Run = pRealm             @ NewConsole = false
+
+#ifdef XMODE SIM
+  Run = uSimMarineV22      @ NewConsole = false
+#elseifdef XMODE M300
+  Run = iM300              @ NewConsole = false
 #endif
 }
 
+#ifdef XMODE SIM
+#include plugs.moos <uSimMarineV22>
+#elseifdef XMODE M300
+#include plugs.moos <iM300>
+#endif
+	
 #include plugs.moos <pShare>
 #include plugs.moos <pHostInfo>
 #include plugs.moos <uProcessWatch>
 
-#ifdef GUI yes
-	#include plugs.moos <pMarineViewer>
-#endif
-
 	
+//----------------------------------------------------
+// pHelmIvP config block
+
+ProcessConfig = pHelmIvP
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  ok_skew      = any
+  
+  behaviors    = targ_$(VNAME).bhv  
+  verbose      = false
+  domain       = course:0:359:360
+  domain       = speed:0:$(MAX_SPD=2):26
+}
+
+//----------------------------------------------------
+// pNodeReporter config block
+
+ProcessConfig = pNodeReporter
+{
+  AppTick     = 2
+  CommsTick   = 2
+
+  platform_color = $(COLOR)
+  vessel_type    = $(VTYPE=kayak)
+
+	//json_report = NODE_REPORT_JSON
+  //coord_policy_global = true
+}
+
+
 //--------------------------------------------------
 // uFldNodeBroker config block
 
@@ -52,21 +88,6 @@ ProcessConfig = uFldNodeBroker
 
   bridge = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
   bridge = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
-}
-
-//------------------------------------------------------
-// uSimMarineV22 config block
-
-ProcessConfig = uSimMarineV22
-{
-  AppTick   = 10
-  CommsTick = 10
-
-  start_pos = $(START_POS), 180, 0
-  prefix    = NAV
-
-	turn_rate     = 90 
-	turn_spd_loss = 0.6
 }
 
 //-----------------------------------------------------
@@ -102,33 +123,6 @@ ProcessConfig = pMarinePIDV22
   SPEED_FACTOR = 20
 }
 
-//----------------------------------------------------
-// pNodeReporter config block
-
-ProcessConfig = pNodeReporter
-{
-  AppTick     = 2
-  CommsTick   = 2
-  
-  vessel_type = KAYAK
-}
-
-//----------------------------------------------------
-// pHelmIvP config block
-
-ProcessConfig = pHelmIvP
-{
-  AppTick    = 4
-  CommsTick  = 4
-
-  ok_skew      = any
-  
-  behaviors    = targ_$(VNAME).bhv  
-  verbose      = false
-  domain       = course:0:359:360
-  domain       = speed:0:5:26
-}
-
 //--------------------------------------------------
 // pLogger config block
 
@@ -153,39 +147,3 @@ ProcessConfig = pLogger
   CompressAlogs = false
 }
 
-#ifdef GUI yes
-//----------------------------------------------------
-ProcessConfig = pMarineViewer
-{
-  AppTick    = 4
-  CommsTick  = 4
-
-  tiff_file            = forrest19.tif
-  set_pan_x            = -90
-  set_pan_y            = -280
-  zoom                 = 0.65
-  vehicles_shape_scale = 1.5
-  vehicles_name_mode   = names+shortmode
-
-  // Appcast configuration
-  appcast_height       = 75
-  appcast_width        = 30
-  appcast_viewable     = true
-  appcast_color_scheme = indigo
-  nodes_font_size      = xlarge
-  procs_font_size      = xlarge
-  appcast_font_size    = xlarge
-
-  scope = PSHARE_INPUT_SUMMARY
-
-  action = STATION_ALL = false
-  action = STATION_ALL = true
-
-  button_one   = DEPLOY  # DEPLOY=true 
-  button_one   = MOOS_MANUAL_OVERRIDE=false 
-  button_one   = RETURN=false
-  button_two   = RETURN  # RETURN=true
-  button_three = STATION:T  # STATION=true
-  button_four  = STATION:F  # STATION=false
-}
-#endif

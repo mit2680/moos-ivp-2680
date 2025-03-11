@@ -11,18 +11,6 @@ MOOSTimeWarp = $(WARP)
 LatOrigin  = 43.825300 
 LongOrigin = -70.330400 
 
-<tag><pShare>
-//---------------------------------------------------------
-// pShare config block
-
-ProcessConfig = pShare
-{
-  AppTick   = 2
-  CommsTick = 2
-
-  input = route =  $(IP_ADDR):$(PSHARE_PORT)
-}
-
 <tag><pHostInfo>
 //--------------------------------------------------
 // pHostInfo config block
@@ -37,6 +25,18 @@ ProcessConfig = pHostInfo
 #endif
 }
 
+<tag><pShare>
+//---------------------------------------------------------
+// pShare config block
+
+ProcessConfig = pShare
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  input = route =  $(IP_ADDR):$(PSHARE_PORT)
+}
+
 <tag><uProcessWatch>
 //--------------------------------------------------------
 // uProcessWatch config block
@@ -46,49 +46,40 @@ ProcessConfig = uProcessWatch
   AppTick   = 2
   CommsTick = 2
   
+	allow_retractions = true
+
 	watch_all = true
   nowatch   = uMAC*
   nowatch   = uXMS*
   nowatch   = uPokeDB*
   nowatch   = uMAC*
+
+	summary_wait = 10
 }
 
-<tag><pMarineViewer>
-//--------------------------------------------------------
-// pMarineViewer config block
-
-ProcessConfig = pMarineViewer
+<tag><uSimMarineV22>
+//------------------------------------------------------
+// uSimMarineV22 Config Block
+	
+ProcessConfig = uSimMarineV22
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 
-  tiff_file              = forrest19.tif
-  set_pan_x              = -90
-  set_pan_y              = -280
-  zoom                   = 0.65
-  vehicles_shape_scale   = 1.5
-  vehicles_name_mode     = names+shortmode
-  polygon_viewable_labels = false
+  start_pos = $(START_POS), 0
+  prefix    = NAV
 
-  // Appcast configuration
-  appcast_height       = 75
-  appcast_width        = 30
-  appcast_viewable     = true
-  appcast_color_scheme = indigo
-  nodes_font_size      = xlarge
-  procs_font_size      = xlarge
-  appcast_font_size    = large
+  max_speed = $(MAX_SPD)
 
-  scope = DB_CLIENTS
+  turn_rate = 95
+  turn_spd_loss = 0.6
 
-  action = STATION_ALL = false
-  action = STATION_ALL = true
+  //post_des_thrust = DESIRED_THRUSTX
+  //post_des_rudder = DESIRED_RUDDERX
 
-  button_one   = DEPLOY  # DEPLOY_ALL=true 
-  button_one   = MOOS_MANUAL_OVERRIDE_ALL=false 
-  button_one   = RETURN_ALL=false
-  button_two   = RETURN  # RETURN_ALL=true
-  button_three = STATION:T  # STATION_ALL=true
-  button_four  = STATION:F  # STATION_ALL=false
+  //post_navpos_summary = true
+
+  //rotate_speed = 0.012 
+  //drift_x      = 0.0045
+  //thrust_map = -100:-2, 0:0, 20:1, 40:2, 60:3, 80:5, 100:5                  
 }
-
