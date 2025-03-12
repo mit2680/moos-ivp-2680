@@ -4,9 +4,7 @@
 initialize   DEPLOY        = true
 initialize   RETURN        = false
 initialize   STATION       = false
-initialize   AT_HOME       = true
 initialize   TRAVERSE      = true
-initialize   REFUEL_NEEDED = false   // ADDED
 
 //  Hierachical Mode Declarations:
 //  ModeSet Hierarchy: 
@@ -30,21 +28,12 @@ set MODE = STATION-KEEPING {
 
 set MODE = RETURNING {
   MODE = ACTIVE
-  AT_HOME != true                          
-  (RETURN = true) or (REFUEL_NEEDED = true)
+  RETURN = true
 } 
 
 set MODE = TRAVERSING {
   MODE = ACTIVE
   TRAVERSE = true
-  REFUEL_NEEDED != true
-} 
-
-set MODE = REFUELING {
-  MODE = ACTIVE
-  AT_HOME = true
-  REFUEL_NEEDED = true
-  RETURN = false
 } 
 
 //----------------------------------------------
@@ -55,7 +44,6 @@ Behavior = BHV_Waypoint
   updates   = VISIT_UPDATES
   condition = MODE==TRAVERSING
   endflag   = RETURN = true
-	runflag   = AT_HOME = false
 	
       speed = 1.3
      radius = 3.0
@@ -74,7 +62,6 @@ Behavior = BHV_Waypoint
   pwt         = 100
   updates     = RETURN_UPDATES
   condition   = MODE==RETURNING
-  endflag     = AT_HOME = true 
   endflag     = RETURN = false
   spawnx_flag = RETURN_UPDATES=point=$[OSX],$[OSY]
 
@@ -86,16 +73,6 @@ Behavior = BHV_Waypoint
        lead = 8
 }
 
-//----------------------------------------------
-Behavior = BHV_Timer
-{
-  name            = refuel
-  condition       = MODE == REFUELING
-  duration        = 60
-  duration_status = TIMER_REFUEL
-  perpetual       = true 
-  endflag         = REFUEL_NEEDED = false  
-}
 
 //----------------------------------------------
 Behavior = BHV_StationKeep
