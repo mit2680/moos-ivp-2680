@@ -56,8 +56,13 @@ done
 vecho "Setting starting position, speeds, vnames, colors"
 
 if [ "${RAND_VPOS}" = "yes" -o  ! -f "vpositions.txt" ]; then
-    pickpos --poly="0,0: 180,0 : 180,25 : 0,25" \
+    pickpos --poly="0,0: 180,0 : 180,-25 : 0,-25" \
             --amt=$VEHICLE_AMT --hdg="170:190" > vpositions.txt
+fi
+
+if [ "${RAND_VPOS}" = "yes" -o  ! -f "vlocations.txt" ]; then
+    pickpos --poly="0,-150: 180,-150 : 180,-75 : 0,-75" \
+            --amt=$VEHICLE_AMT  > vlocations.txt
 fi
 
 pickpos --amt=$VEHICLE_AMT --spd=1:1.2 > vspeeds.txt 
@@ -77,6 +82,7 @@ if [ "${VERBOSE}" != "" ]; then
     echo "RAND_VPOS   = $RAND_VPOS"
     echo "--------------------------------------(pos/spd)"
     echo "vpositions.txt:"; cat  vpositions.txt
+    echo "vpositions.txt:"; cat  vlocations.txt
     echo "vspeeds.txt:";    cat  vspeeds.txt
     echo "--------------------------------------(vprops)"
     echo "vnames.txt:";     cat  vnames.txt

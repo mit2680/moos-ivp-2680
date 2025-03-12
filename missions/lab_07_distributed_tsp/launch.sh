@@ -10,7 +10,6 @@
 vecho() { if [ "$VERBOSE" != "" ]; then echo "$ME: $1"; fi }
 on_exit() { echo; echo "$ME: Halting all apps"; kill -- -$$; }
 trap on_exit SIGINT
-trap on_exit SIGTERM
 
 #------------------------------------------------------------
 #  Part 2: Set global variable default values
@@ -95,6 +94,7 @@ INIT_VARS=" --amt=$VAMT $RAND_VPOS $VERBOSE "
 ./init_field.sh $INIT_VARS
 
 VEHPOS=(`cat vpositions.txt`)
+VLOCAS=(`cat vlocations.txt`)
 SPEEDS=(`cat vspeeds.txt`)
 VNAMES=(`cat vnames.txt`)
 VCOLOR=(`cat vcolors.txt`)
@@ -119,6 +119,7 @@ if [ "${VERBOSE}" != "" ]; then
     echo "VNAMES =        [${VNAMES[*]}]              "
     echo "VCOLORS =       [${VCOLOR[*]}]              "
     echo "START_POS =     [${VEHPOS[*]}]              "
+    echo "VLOCATIONS =    [${VLOCAS[*]}]              "
     echo "--------------------------------(Monte)-----"
     echo "XLAUNCHED =     [${XLAUNCHED}]              "
     echo "NOGUI =         [${NOGUI}]                  "
@@ -138,6 +139,7 @@ do
     IXX=$(($IX - 1))
     IVARGS="$VARGS --mport=900${IX}  --pshare=920${IX} "
     IVARGS+=" --start_pos=${VEHPOS[$IXX]} "
+    IVARGS+=" --goto_loc=${VLOCAS[$IXX]} "
     IVARGS+=" --stock_spd=${SPEEDS[$IXX]} "
     IVARGS+=" --vname=${VNAMES[$IXX]} "
     IVARGS+=" --color=${VCOLOR[$IXX]} "
