@@ -60,6 +60,11 @@ if [ "${RAND_VPOS}" = "yes" -o  ! -f "vpositions.txt" ]; then
             --amt=$VEHICLE_AMT --hdg="170:190" > vpositions.txt
 fi
 
+if [ "${RAND_VPOS}" = "yes" -o  ! -f "vlocations.txt" ]; then
+    pickpos --poly="0,-150: 180,-150 : 180,-75 : 0,-75" \
+            --amt=$VEHICLE_AMT  > vlocations.txt
+fi
+
 pickpos --amt=$VEHICLE_AMT --spd=1.2:1.2 > vspeeds.txt 
 pickpos --amt=$VEHICLE_AMT --vnames=henry,gilda  > vnames.txt
 pickpos --amt=$VEHICLE_AMT --colors  > vcolors.txt

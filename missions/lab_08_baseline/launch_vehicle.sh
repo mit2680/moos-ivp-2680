@@ -10,7 +10,6 @@
 vecho() { if [ "$VERBOSE" != "" ]; then echo "$ME: $1"; fi }
 on_exit() { echo; echo "$ME: Halting all apps"; kill -- -$$; }
 trap on_exit SIGINT
-trap on_exit SIGTERM
 
 #------------------------------------------------------------
 #  Part 2: Declare global var defaults
@@ -38,6 +37,7 @@ STOCK_SPD="1.4"
 MAX_SPD="2"
 
 # Custom
+GOTO_LOC="100,100"
 
 #------------------------------------------------------------
 #  Part 3: Check for and handle command-line arguments
@@ -69,6 +69,7 @@ for ARGI; do
 	echo "  --max_spd=<m/s>        Max Sim and Helm speed  "
 	echo "                                                 "
 	echo "Options (custom):                                "
+	echo "  --goto_loc=<X,Y>       GoTo location           "
 	exit 0
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then 
         TIME_WARP=$ARGI
@@ -106,6 +107,9 @@ for ARGI; do
         STOCK_SPD="${ARGI#--stock_spd=*}"
     elif [ "${ARGI:0:10}" = "--max_spd=" ]; then
         MAX_SPD="${ARGI#--max_spd=*}"
+
+    elif [ "${ARGI:0:11}" = "--goto_loc=" ]; then
+        GOTO_LOC="${ARGI#--goto_loc=*}"
 
     else 
 	echo "$ME: Bad Arg:[$ARGI]. Exit Code 1."
@@ -159,6 +163,7 @@ if [ "${VERBOSE}" = "yes" ]; then
     echo "------------Fld-------------------"
     echo "FSEAT_IP =      [${FSEAT_IP}]     "
     echo "------------Custom----------------"
+    echo "GOTO_LOC =      [${GOTO_LOC}]     "
     echo -n "Hit any key to continue launching $VNAME "
     read ANSWER
 fi
@@ -191,6 +196,7 @@ nsplug meta_vehicle.moos targ_$VNAME.moos $NSFLAGS WARP=$TIME_WARP \
 nsplug meta_vehicle.bhv targ_$VNAME.bhv $NSFLAGS         \
        START_POS=$START_POS         VNAME=$VNAME         \
        STOCK_SPD=$STOCK_SPD         MMOD=$MMOD           \
+       GOTO_LOC=$GOTO_LOC
 
 if [ "${JUST_MAKE}" = "yes" ]; then
     echo "$ME: Targ files made; exiting without launch."

@@ -83,6 +83,7 @@ ProcessConfig = pMarineViewer
   vehicles_shape_scale   = 1.5
   vehicles_name_mode     = names+shortmode
   polygon_viewable_labels = false
+  seglist_viewable_labels = false
 
   // Appcast configuration
   appcast_height       = 75

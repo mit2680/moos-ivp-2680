@@ -36,4 +36,5 @@ rm -f   $VERBOSE   *~  *.moos++
 rm -f   $VERBOSE   targ_* tmp_*
 rm -f   $VERBOSE   .LastOpenedMOOSLogDirectory
 rm -f   $VERBOSE   .mem_info* vloiterpos.txt vpositions.txt
-rm -f   $VERBOSE   vnames.txt vcolors.txt vcolors.txt vspeeds.txt
+rm -f   $VERBOSE   vnames.txt vcolors.txt vcolors.txt
+rm -f   $VERBOSE   vspeeds.txt vlocations.txt
