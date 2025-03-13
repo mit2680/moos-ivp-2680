@@ -37,7 +37,7 @@ STOCK_SPD="1.4"
 MAX_SPD="2"
 
 # Custom
-GOTO_LOC="x50,y=-100"
+GOTO_LOC="x=50,y=-100"
 
 #------------------------------------------------------------
 #  Part 3: Check for and handle command-line arguments
