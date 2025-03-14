@@ -82,7 +82,7 @@ if [ "${VERBOSE}" != "" ]; then
     echo "RAND_VPOS   = $RAND_VPOS"
     echo "--------------------------------------(pos/spd)"
     echo "vpositions.txt:"; cat  vpositions.txt
-    echo "vpositions.txt:"; cat  vlocations.txt
+    echo "vlocations.txt:"; cat  vlocations.txt
     echo "vspeeds.txt:";    cat  vspeeds.txt
     echo "--------------------------------------(vprops)"
     echo "vnames.txt:";     cat  vnames.txt
