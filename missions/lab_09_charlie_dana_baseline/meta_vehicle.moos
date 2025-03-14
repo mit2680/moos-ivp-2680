@@ -1,8 +1,5 @@
 ServerHost = localhost
-ServerPort = $(VPORT)
-Simulator  = true
-
-// Community name IS the vehicle name
+ServerPort = $(MOOS_PORT)
 Community  = $(VNAME)
 
 #include plugs.moos <origin_warp>
@@ -24,7 +21,6 @@ Processconfig = ANTLER
   Run = uFldNodeBroker   @ NewConsole = false
   Run = pRealm           @ NewConsole = false
 }
-
 
 #include plugs.moos <pShare>
 #include plugs.moos <pHostInfo>
@@ -56,7 +52,7 @@ ProcessConfig = uSimMarineV22
   AppTick   = 10
   CommsTick = 10
 
-  start_pos = $(START_POS), 180, 0
+  start_pos = $(START_POS),speed=0
   prefix    = NAV
 
 	turn_rate = 80
