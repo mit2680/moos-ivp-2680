@@ -197,9 +197,9 @@ ProcessConfig = pMarineViewer
   vehicles_shape_scale = 1.0
   vehicles_name_mode   = names+shortmode
 
-	procs_font_size = medium
-	nodes_font_size = medium
-	infocast_font_size = medium
+	nodes_font_size = large
+	procs_font_size = large
+	infocast_font_size = large
 	
   polygon_viewable_all    = true
   polygon_viewable_labels = false
