@@ -121,9 +121,10 @@ for ARGI; do
 	VAMT="2"
     elif [ "${ARGI}" = "--rs1" -o "${ARGI}" = "-rs1" ]; then
 	GAME_FORMAT="rs1"
+	VAMT="2"
     elif [ "${ARGI}" = "--rs2" -o "${ARGI}" = "-rs2" ]; then
 	GAME_FORMAT="rs2"
-	VAMT="2"
+	VAMT="4"
 
     elif [ "${ARGI}" = "--pav60" -o "${ARGI}" = "-pav60" ]; then
 	SWIM_REGION=$ARGI
