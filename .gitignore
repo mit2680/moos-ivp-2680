@@ -13,9 +13,11 @@ bin/*
 *vcolors.txt
 *vloiterpos.txt
 *vpositions.txt
+*vlocations.txt
 *vspeeds.txt
 *vnames.txt
 *.LastOpenedMOOSLogDirectory
 *++
 *~+
 *#
+*.old
