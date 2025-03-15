@@ -22,17 +22,16 @@ ProcessConfig = pHostInfo
   default_hostip_force = $(IP_ADDR)
 }
 
-<tag><uSimMarine>
+<tag><uSimMarineV22>
 //------------------------------------------------------
 // uSimMarine Config Block
 
-ProcessConfig = uSimMarine
+ProcessConfig = uSimMarineV22
 {
   AppTick   = 10
   CommsTick = 10
 
-	deprecated_ok = true
-  start_pos = $(START_POS), 180
+  start_pos = $(START_POS)
   prefix    = NAV
 }
 

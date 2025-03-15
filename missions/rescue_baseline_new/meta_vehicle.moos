@@ -10,7 +10,7 @@ Processconfig = ANTLER
   MSBetweenLaunches = 50
    
   Run = MOOSDB             @ NewConsole = false
-  Run = pMarinePID         @ NewConsole = false
+  Run = pMarinePIDV22      @ NewConsole = false
   Run = pLogger            @ NewConsole = false
   Run = pNodeReporter      @ NewConsole = false
 
@@ -29,7 +29,7 @@ Processconfig = ANTLER
 #endif
 
 #ifdef XMODE SIM
-  Run = uSimMarine         @ NewConsole = false
+  Run = uSimMarineV22      @ NewConsole = false
 #elseifdef XMODE M300
   Run = iM300              @ NewConsole = false
   Run = iM300Health        @ NewConsole = false
@@ -38,7 +38,7 @@ Processconfig = ANTLER
 	}
 
 #ifdef XMODE SIM
-#include plugs.moos <uSimMarine>
+#include plugs.moos <uSimMarineV22>
 #elseifdef XMODE M300
 #include plugs.moos <iM300>
 #include plugs.moos <iM300Health>
@@ -194,9 +194,9 @@ ProcessConfig = pNodeReporter
 
 
 //---------------------------------------
-// pMarinePID Config Block
+// pMarinePIDV22 Config Block
 	
-ProcessConfig = pMarinePID
+ProcessConfig = pMarinePIDV22
 {
   AppTick    = 10
   CommsTick  = 10
