@@ -29,10 +29,14 @@ protected:
   void registerVariables();
   
 private: // Configuration variables
-  unsigned int m_pt_postings_expected;
+  unsigned int m_pts_expected;
   
 private: // State variables
   std::set<std::string> m_postings;
+  bool m_first_received;
+  bool m_last_received;
+
+  bool m_result_posted;
   
 };
 

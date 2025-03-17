@@ -17,6 +17,11 @@ using namespace std;
 
 PointAssignEval::PointAssignEval()
 {
+  m_pts_expected = 100;
+  m_first_received = false;
+  m_last_received  = false;
+
+  m_result_posted  = false;
 }
 
 //---------------------------------------------------------
@@ -30,25 +35,31 @@ bool PointAssignEval::OnNewMail(MOOSMSG_LIST &NewMail)
   for(p=NewMail.begin(); p!=NewMail.end(); p++) {
     CMOOSMsg &msg = *p;
     string key    = msg.GetKey();
+    string sval  = msg.GetString(); 
 
 #if 0 // Keep these around just for template
     string comm  = msg.GetCommunity();
     double dval  = msg.GetDouble();
-    string sval  = msg.GetString(); 
     string msrc  = msg.GetSource();
     double mtime = msg.GetTime();
     bool   mdbl  = msg.IsDouble();
     bool   mstr  = msg.IsString();
 #endif
 
-     if(key == "FOO") 
-       cout << "great!";
-
-     else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
-       reportRunWarning("Unhandled Mail: " + key);
-   }
-	
-   return(true);
+    if(key == "VISIT_POINT") {
+      if(sval == "firstpoint")
+	m_first_received = true;
+      else if(sval == "lastpoint")
+	m_last_received = true;
+      else 
+	m_postings.insert(sval);
+    }
+    
+    else if(key != "APPCAST_REQ") // handled by AppCastingMOOSApp
+      reportRunWarning("Unhandled Mail: " + key);
+  }
+  
+  return(true);
 }
 
 //---------------------------------------------------------
@@ -66,7 +77,15 @@ bool PointAssignEval::OnConnectToServer()
 bool PointAssignEval::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-  // Do your thing here!
+
+  if(!m_result_posted) {
+    if(m_postings.size() >= m_pts_expected) {
+      Notify("MISSION_EVALUATED", "true");
+      Notify("MISSION_SUCCESS", "true");
+      m_result_posted = true;
+    }
+  }
+  
   AppCastingMOOSApp::PostReport();
   return(true);
 }
@@ -91,10 +110,8 @@ bool PointAssignEval::OnStartUp()
     string value = line;
 
     bool handled = false;
-    if(param == "VISIT_POINT") {
-      m_postings.insert(value);
-      handled = true;
-    }
+    if(param == "pts_expected")
+      handled = setUIntOnString(m_pts_expected, value);
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -120,10 +137,12 @@ void PointAssignEval::registerVariables()
 bool PointAssignEval::buildReport() 
 {
   m_msgs << "Config:                                     " << endl;
-  m_msgs << "  pt_postings_expected: " << m_pt_postings_expected << endl;
+  m_msgs << "  pts_expected: " << m_pts_expected << endl;
   m_msgs << endl;
   m_msgs << "Status:                                     " << endl;
-  m_msgs << "  pt_postings: " << m_postings.size() << endl;
+  m_msgs << "  first_received: " << boolToString(m_first_received) << endl;
+  m_msgs << "   last_received: " << boolToString(m_last_received) << endl;
+  m_msgs << "    pts_received: " << m_postings.size() << endl;
 
   return(true);
 }
