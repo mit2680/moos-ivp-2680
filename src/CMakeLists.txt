@@ -75,6 +75,10 @@ IF( EXISTS ${CMAKE_SOURCE_DIR}/src/uFldHazardSensor )
   ADD_SUBDIRECTORY(uFldHazardSensor)
 ENDIF()
 
+IF( EXISTS ${CMAKE_SOURCE_DIR}/src/pPointAssignEval )
+  ADD_SUBDIRECTORY(pPointAssignEval)
+ENDIF()
+
 #============================================================================
 # Add the LAB Collaborative Rescue Modules (if present)
 #============================================================================
