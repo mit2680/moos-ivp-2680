@@ -49,8 +49,10 @@ bool PointAssignEval::OnNewMail(MOOSMSG_LIST &NewMail)
     if(key == "VISIT_POINT") {
       if(sval == "firstpoint")
 	m_first_received = true;
-      else if(sval == "lastpoint")
+      else if(sval == "lastpoint") {
 	m_last_received = true;
+	Notify("PPAE_LAST_POINT_POSTED", "true");
+      }
       else 
 	m_postings.insert(sval);
     }
@@ -77,11 +79,10 @@ bool PointAssignEval::OnConnectToServer()
 bool PointAssignEval::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-
-  if(!m_result_posted) {
+  
+  if(m_last_received && !m_result_posted) {
     if(m_postings.size() >= m_pts_expected) {
-      Notify("MISSION_EVALUATED", "true");
-      Notify("MISSION_SUCCESS", "true");
+      Notify("PPAE_PTS_POSTED", m_postings.size());
       m_result_posted = true;
     }
   }
