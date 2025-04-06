@@ -18,6 +18,12 @@ VERBOSE=""
 RAND_VPOS="no"
 
 # custom
+RAND_SWIMMERS=""
+GAME_FORMAT="-r1"
+SWIMMERS=15
+UNREGERS=0
+SWIM_FILE="mit_00.txt"
+SWIM_REGION="60,10:-30.36,-32.84:-4.66,-87.05:85.7,-44.22"
 
 #------------------------------------------------------------
 #  Part 3: Check for and handle command-line arguments
@@ -33,13 +39,40 @@ for ARGI; do
 	echo "  --rand, -r         Rand vehicle positions    "
 	echo "                                               "
 	echo "Options (custom):                              "
-       exit 0;
+	echo "  --randswim, -rsl   Rand swim locations       " 
+	echo "  --format<format>   Game format r1,r2,rs1,rs2 " 
+	echo "                                               "
+	echo "  --pav60            Gen rand swimmers in pav60" 
+	echo "  --pav90            Gen rand swimmers in pav90" 
+	echo "  --swim_file=<file> Set the swim file         " 
+	echo "  --swimmers=<15>    Rand gen N reg swimmers   " 
+	echo "  --unreg=<0>        Rand gen N unreg swimmers " 
+	exit 0;
     elif [ "${ARGI:0:6}" = "--amt=" ]; then
         VEHICLE_AMT="${ARGI#--amt=*}"
     elif [ "${ARGI}" = "--verbose" -o "${ARGI}" = "-v" ]; then
 	VERBOSE=$ARGI
     elif [ "${ARGI}" = "--rand" -o "${ARGI}" = "-r" ]; then
         RAND_VPOS="yes"
+
+    elif [ "${ARGI}" = "--randswim" -o "${ARGI}" = "-rsl" ]; then
+	RAND_SWIMMERS="true"
+    elif [ "${ARGI:0:9}" = "--format=" ]; then
+        GAME_FORMAT="${ARGI#--format=*}"
+
+    elif [ "${ARGI}" = "--mit_small" -o "${ARGI}" = "--pav60" ]; then
+	SWIM_REGION="60,10:-30.36,-32.84:-4.66,-87.05:85.70,-44.22"
+	RAND_SWIMMERS="true"
+    elif [ "${ARGI}" = "--mit_big" -o "${ARGI}" = "--pav90" ]; then
+	SWIM_REGION="60,10:-75.54,-54.26:-36.99,-135.58:98.55,-71.32"
+	RAND_SWIMMERS="true"
+    elif [ "${ARGI:0:11}" = "--swimmers=" ]; then
+        SWIMMERS="${ARGI#--swimmers=*}"
+	RAND_SWIMMERS="true"
+    elif [ "${ARGI:0:8}" = "--unreg=" ]; then
+        UNREGERS="${ARGI#--unreg=*}"
+	RAND_SWIMMERS="true"
+
     else 
 	echo "$ME: Bad Arg: $ARGI. Exit Code 1."
 	exit 1
@@ -55,14 +88,40 @@ done
 #------------------------------------------------------------
 vecho "Setting starting position, speeds, vnames, colors"
 
-echo "x=0,y=0,heading=180"   >  vpositions.txt
-echo "x=180,y=0,heading=180" >> vpositions.txt
-echo "x=0,y=-75"             >  vloiterpos.txt
-echo "x=125,y=-50"           >> vloiterpos.txt
+if [ "${RAND_VPOS}" = "yes" -o  ! -f "vpositions.txt" ]; then
+    pickpos --poly="-2,-8 : 4,-13 : 60,13 : 57,18" --buffer=15 \
+            --amt=$VEHICLE_AMT --hdg="170:190" > vpositions.txt
+fi
 
-pickpos --amt=$VEHICLE_AMT --spd=1.5:2 > vspeeds.txt 
-pickpos --amt=$VEHICLE_AMT --vnames=charlie,dana  > vnames.txt
-pickpos --amt=$VEHICLE_AMT --colors  > vcolors.txt
+# generate randomly placed swimmers
+if [ "${RAND_SWIMMERS}" != "" -o  ! -f "mit_00.txt" ]; then
+    gen_swimmers --poly=$SWIM_REGION --swimmers=$SWIMMERS   \
+                 --unreg=$UNREGERS --sep=7 > mit_00.txt
+fi
+
+# Set the speeds and names
+pickpos --amt=$VEHICLE_AMT --spd=1.2:1.2 > vspeeds.txt 
+pickpos --amt=$VEHICLE_AMT --vnames  > vnames.txt
+
+# Handle the chosen game format
+if [ "${GAME_FORMAT}" = "r2" ]; then
+    echo -e "rescue\nrescue" > vroles.txt
+    echo -e "abe\nabe"       > vmates.txt
+    echo -e "green\nblue"    > vcolors.txt
+elif [ "${GAME_FORMAT}" = "rs1" ]; then
+    echo -e "rescue\nscout" > vroles.txt
+    echo -e "abe\nabe"      > vmates.txt
+    echo -e "blue\nblue"    > vcolors.txt
+elif [ "${GAME_FORMAT}" = "rs2" ]; then
+    echo -e "rescue\nrescue\nscout\nscout" > vroles.txt
+    echo -e "abe\nben\nabe\nben"           > vmates.txt
+    echo -e "green\nblue\ngreen\nblue"     > vcolors.txt
+else # format=r1
+    echo "rescue" > vroles.txt
+    echo "abe"    > vmates.txt
+    echo "green"  > vcolors.txt
+fi
+
 
 #------------------------------------------------------------
 #  Part 6: Set other aspects of the field, e.g., obstacles
@@ -81,8 +140,6 @@ if [ "${VERBOSE}" != "" ]; then
     echo "--------------------------------------(vprops)"
     echo "vnames.txt:";     cat  vnames.txt
     echo "vcolors.txt:";    cat  vcolors.txt
-    echo "--------------------------------------(custom)"
-    echo "vloiterpos.txt:"; cat  vloiterpos.txt
     echo -n "Hit any key to continue"
     read ANSWER
 fi

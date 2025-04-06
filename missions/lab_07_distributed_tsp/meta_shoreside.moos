@@ -12,14 +12,21 @@ Processconfig = ANTLER
 {
   MSBetweenLaunches = 200
 
-  Run = MOOSDB          @ NewConsole = false
-  Run = pRealm          @ NewConsole = false
-  Run = pMarineViewer   @ NewConsole = false
-  Run = pLogger         @ NewConsole = false
-  Run = pHostInfo       @ NewConsole = false
-  Run = pShare          @ NewConsole = false
-  Run = uProcessWatch   @ NewConsole = false
-  Run = uFldShoreBroker @ NewConsole = false
+  Run = MOOSDB           @ NewConsole = false
+  Run = pRealm           @ NewConsole = false
+  Run = pLogger          @ NewConsole = false
+  Run = pHostInfo        @ NewConsole = false
+  Run = pShare           @ NewConsole = false
+  Run = uProcessWatch    @ NewConsole = false
+  Run = uFldShoreBroker  @ NewConsole = false
+  Run = pPointAssignEval @ NewConsole = false
+
+#ifdef LAUNCH_GUI yes
+  Run = pMarineViewer    @ NewConsole = false
+#else
+  Run = pMissionHash     @ NewConsole = false
+  Run = pAutoPoke        @ NewConsole = false
+#endif
 }
 
 #include plugs.moos <pHostInfo>
@@ -67,7 +74,6 @@ ProcessConfig = pLogger
   WildCardLogging = true 
 }
 
-
 //--------------------------------------------------------
 // pMarineViewer config block
 
@@ -105,3 +111,13 @@ ProcessConfig = pMarineViewer
   button_three = STATION:T  # STATION_ALL=true
   button_four  = STATION:F  # STATION_ALL=false
 }
+
+//--------------------------------------------------
+// pPointAssignEval config block
+
+ProcessConfig = pPointAssignEval
+{
+  AppTick   = 2
+  CommsTick = 2
+}
+
