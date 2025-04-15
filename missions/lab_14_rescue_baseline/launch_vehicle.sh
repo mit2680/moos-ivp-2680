@@ -42,6 +42,7 @@ START_POS="0,0"
 SPEED="1.0"
 RETURN_POS="5,0"
 MAXSPD="2"
+PGR="pGenRescue"
 
 TMATE=""
 VROLE="rescue"
@@ -84,7 +85,8 @@ for ARGI; do
 	echo "    Vehicle role, either rescue, scout, or fixed "
 	echo "  --tmate=<vname>                                " 
 	echo "    Name of the teammate vehicle if applicable   "
-	echo "                                                 "
+	echo "  --pgr=<app>                                    " 
+	echo "    Full path of version of pGenRescue           "
 	exit 0;
     elif [ "${ARGI//[^0-9]/}" = "$ARGI" -a "$TIME_WARP" = 1 ]; then 
         TIME_WARP=$ARGI
@@ -127,6 +129,8 @@ for ARGI; do
         VROLE="${ARGI#--vrole=*}"
     elif [ "${ARGI:0:8}" = "--tmate=" ]; then
         TMATE="${ARGI#--tmate=*}"
+    elif [ "${ARGI:0:6}" = "--pgr=" ]; then
+        PGR="${ARGI#--pgr=*}"
 
     else 
 	echo "$ME: Bad Arg:[$ARGI]. Exit Code 1."
@@ -191,6 +195,7 @@ if [ "${VERBOSE}" = "yes" ]; then
     echo "------------Custom----------------"
     echo "VROLE =         [${VROLE}]        "
     echo "TMATE =         [${TMATE}]        "
+    echo "PGR =           [${PGR}]          "
     echo -n "Hit any key to continue launching $VNAME "
     read ANSWER
 fi
@@ -219,6 +224,7 @@ nsplug meta_vehicle.moos targ_$VNAME.moos $NSFLAGS WARP=$TIME_WARP \
        START_POS=$START_POS         MAX_SPD=$MAX_SPD     \
        MMOD=$MMOD                                        \
        VROLE=$VROLE                 TMATE=$TMATE         \
+       PGR=$PGR                                          \
        FSEAT_IP=$FSEAT_IP
 
 nsplug meta_vehicle.bhv targ_$VNAME.bhv $NSFLAGS         \

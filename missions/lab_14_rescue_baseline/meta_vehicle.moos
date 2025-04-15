@@ -25,7 +25,7 @@ Processconfig = ANTLER
   Run = uTimerScript       @ NewConsole = false
   Run = pRealm             @ NewConsole = false
 #ifdef VROLE rescue
-  Run = pGenRescue         @ NewConsole = false
+  //Run = $(PGR=pGenRescue)  @ NewConsole = false
 #endif
 
 #ifdef XMODE SIM
