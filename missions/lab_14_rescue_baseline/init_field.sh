@@ -19,10 +19,10 @@ RAND_VPOS="no"
 
 # custom
 RAND_SWIMMERS=""
-GAME_FORMAT="-r1"
+GAME_FORMAT="r1"
 SWIMMERS=15
 UNREGERS=0
-SWIM_FILE="mit_00.txt"
+SWIM_FILE="mit_rand.txt"
 SWIM_REGION="60,10:-30.36,-32.84:-4.66,-87.05:85.7,-44.22"
 
 #------------------------------------------------------------
@@ -39,7 +39,7 @@ for ARGI; do
 	echo "  --rand, -r         Rand vehicle positions    "
 	echo "                                               "
 	echo "Options (custom):                              "
-	echo "  --randswim, -rsl   Rand swim locations       " 
+	echo "  --rsl, -rsl        Rand swim locations       " 
 	echo "  --format<format>   Game format r1,r2,rs1,rs2 " 
 	echo "                                               "
 	echo "  --pav60            Gen rand swimmers in pav60" 
@@ -55,11 +55,11 @@ for ARGI; do
     elif [ "${ARGI}" = "--rand" -o "${ARGI}" = "-r" ]; then
         RAND_VPOS="yes"
 
-    elif [ "${ARGI}" = "--randswim" -o "${ARGI}" = "-rsl" ]; then
-	RAND_SWIMMERS="true"
     elif [ "${ARGI:0:9}" = "--format=" ]; then
         GAME_FORMAT="${ARGI#--format=*}"
 
+    elif [ "${ARGI}" = "--rsl" -o "${ARGI}" = "-rsl" ]; then
+	RAND_SWIMMERS="true"
     elif [ "${ARGI}" = "--mit_small" -o "${ARGI}" = "--pav60" ]; then
 	SWIM_REGION="60,10:-30.36,-32.84:-4.66,-87.05:85.70,-44.22"
 	RAND_SWIMMERS="true"
@@ -94,9 +94,9 @@ if [ "${RAND_VPOS}" = "yes" -o  ! -f "vpositions.txt" ]; then
 fi
 
 # generate randomly placed swimmers
-if [ "${RAND_SWIMMERS}" != "" -o  ! -f "mit_00.txt" ]; then
+if [ "${RAND_SWIMMERS}" != "" ]; then
     gen_swimmers --poly=$SWIM_REGION --swimmers=$SWIMMERS   \
-                 --unreg=$UNREGERS --sep=7 > mit_00.txt
+                 --unreg=$UNREGERS --sep=7 > $SWIM_FILE
 fi
 
 # Set the speeds and names
@@ -119,7 +119,7 @@ elif [ "${GAME_FORMAT}" = "rs2" ]; then
 else # format=r1
     echo "rescue" > vroles.txt
     echo "abe"    > vmates.txt
-    echo "green"  > vcolors.txt
+    echo "yellow" > vcolors.txt
 fi
 
 
@@ -132,8 +132,15 @@ fi
 #------------------------------------------------------------
 if [ "${VERBOSE}" != "" ]; then
     echo "--------------------------------------"
-    echo "VEHICLE_AMT = $VEHICLE_AMT"
-    echo "RAND_VPOS   = $RAND_VPOS"
+    echo "CMD_ARG       = $CMD_ARGS"
+    echo "--------------------------------------"
+    echo "VEHICLE_AMT   = $VEHICLE_AMT"
+    echo "RAND_VPOS     = $RAND_VPOS"
+    echo "--------------------------------------"
+    echo "RAND_SWIMMERS = $RAND_SWIMMERS"
+    echo "SWIM_FILE     = $RAND_SWIMMERS"
+    echo "SWIMMERS      = $SWIMMERS"
+    echo "UNREGERS      = $UNREGERS"
     echo "--------------------------------------(pos/spd)"
     echo "vpositions.txt:"; cat  vpositions.txt
     echo "vspeeds.txt:";    cat  vspeeds.txt

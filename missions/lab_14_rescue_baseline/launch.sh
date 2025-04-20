@@ -30,15 +30,20 @@ MMOD=""
 XLAUNCHED="no"
 NOGUI=""
 
-# Custom
+# Custom: num vehicles/teams
+GAME_FORMAT="r1"
+
+# Custom: on-the-fly swimfile gen
 RAND_SWIMMERS=""
-MAX_TIME=""
-STRUCTURE="-r1"
+SWIM_REGION=""
+SWIMMERS=""
+UNREGERS=""
+
+# Custom: The main input file
 SWIM_FILE=""
 
-#VROLES=("rescue" "rescue")
-#VROLES=("fixed")
-#VROLES_LIST="fixed"
+# Custom: Max competition time
+MAX_TIME=""
 
 #-------------------------------------------------------
 #  Part 3: Check for and handle command-line arguments
@@ -111,9 +116,6 @@ for ARGI; do
 	NOGUI="--nogui"
 
 
-    elif [ "${ARGI}" = "-rsl" ]; then
-	RAND_SWIMMERS=" ${ARGI}"
-
     elif [ "${ARGI}" = "--r1" -o "${ARGI}" = "-r1" ]; then
 	GAME_FORMAT="r1"
     elif [ "${ARGI}" = "--r2" -o "${ARGI}" = "-r2" ]; then
@@ -126,6 +128,8 @@ for ARGI; do
 	GAME_FORMAT="rs2"
 	VAMT="4"
 
+    elif [ "${ARGI}" = "--rsl" -o "${ARGI}" = "-rsl" ]; then
+	RAND_SWIMMERS=" ${ARGI}"
     elif [ "${ARGI}" = "--pav60" -o "${ARGI}" = "-pav60" ]; then
 	SWIM_REGION=$ARGI
     elif [ "${ARGI}" = "--pav90" -o "${ARGI}" = "-pav90" ]; then
@@ -156,7 +160,7 @@ done
 #------------------------------------------------------------
 #  Part 4: Set starting positions, speeds, vnames, colors
 #------------------------------------------------------------
-INIT_VARS=" --amt=$VAMT $RAND_VPOS $VERBOSE "
+INIT_VARS=" --amt=$VAMT $RAND_VPOS $VERBOSE $RAND_SWIMMERS"
 INIT_VARS+=" --format=$GAME_FORMAT $SWIM_REGION $SWIMMERS $UNREGERS "
 ./init_field.sh $INIT_VARS
 
@@ -168,6 +172,20 @@ VROLES=(`cat vroles.txt`)  #custom
 VMATES=(`cat vmates.txt`)  #custom
 
 VAMT=${#VROLES[@]}
+
+# If a newly random swim_file was created, but the name was
+# not specified, use the default name, "mit_rand.txt"
+RAND_SWIM_FILE_MADE=""
+if [ "${RAND_SWIMMERS}" != "" -o "${SWIMMERS}" != "" ]; then
+    RAND_SWIM_FILE_MADE="yes"
+elif [ "${SWIM_REGION}" != "" -o "${UNREGERS}" != "" ]; then
+    RAND_SWIM_FILE_MADE="yes"
+fi
+    x
+if [ "${RAND_SWIM_FILE_MADE}" = "yes" -a "${SWIM_FILE}" = "" ]; then
+    echo "Got here 2"
+    SWIM_FILE="--swim_file=mit_rand.txt"
+fi
 
 #------------------------------------------------------------
 #  Part 5: If verbose, show vars and confirm before launching
@@ -194,10 +212,15 @@ if [ "${VERBOSE}" != "" ]; then
     echo "NOGUI =         [${NOGUI}]                  "
     echo "--------------------------------(Custom)----"
     echo "GAME_FORMAT     [${GAME_FORMAT}]            "
+    echo "MAX_TIME =      [${MAX_TIME}]               "
     echo "VROLES =        [${VROLES[*]}]              "
     echo "VMATES =        [${VMATES[*]}]              "
-    echo "SWIM_FILE       [${SWIM_FILE}]              "
+    echo "--------------------------------(Custom)----"
     echo "SWIM_REGION     [${SWIM_REGION}]            "
+    echo "SWIM_FILE       [${SWIM_FILE}]              "
+    echo "RAND_SWIMMERS   [${RAND_SWIMMERS}]          "
+    echo "SWIMMERS        [${SWIMMERS}]               "
+    echo "UNREGERS        [${UNREGERS}]               "
     echo -n "Hit any key to continue launch           "
     read ANSWER
 fi
@@ -211,7 +234,7 @@ for IX in `seq 1 $VAMT`;
 do
     IXX=$(($IX - 1))
     IVARGS="$VARGS --mport=900${IX}  --pshare=920${IX} "
-    IVARGS+=" --start_pos=${VEHPOS[$IXX]} " #+++++++++++++++ --start=
+    IVARGS+=" --start_pos=${VEHPOS[$IXX]} "
     IVARGS+=" --stock_spd=${SPEEDS[$IXX]} "
     IVARGS+=" --vname=${VNAMES[$IXX]} "
     IVARGS+=" --color=${VCOLOR[$IXX]} "

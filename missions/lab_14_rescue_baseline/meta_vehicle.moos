@@ -25,7 +25,7 @@ Processconfig = ANTLER
   Run = uTimerScript       @ NewConsole = false
   Run = pRealm             @ NewConsole = false
 #ifdef VROLE rescue
-  //Run = $(PGR=pGenRescue)  @ NewConsole = false
+  Run = $(PGR=pGenRescue)  @ NewConsole = false
 #endif
 
 #ifdef XMODE SIM
@@ -56,14 +56,14 @@ ProcessConfig = pHelmIvP
   AppTick    = 4
   CommsTick  = 4
 
-  ok_skew      = any
+  ok_skew     = any
 
   app_logging = true
-  behaviors    = targ_$(VNAME).bhv  
-  verbose      = false
-  domain       = course:0:359:360
-  domain       = speed:0:3:31
-  hold_on_app  = pContactMgrV20
+  behaviors   = targ_$(VNAME).bhv  
+  verbose     = false
+  domain      = course:0:359:360
+  domain      = speed:0:3:31
+  hold_on_app = pContactMgrV20
 
 	goals_mandatory = true	
 }
@@ -208,9 +208,14 @@ ProcessConfig = pMarinePIDV22
   active_start  = true
 
   // Yaw PID controller (Set for M300)
+#ifdef XMODE SIM
+  yaw_pid_kp             = 1.5
+  yaw_pid_ki             = 0.5  
+#elseifdef XMODE M300
   yaw_pid_kp             = 0.9 
+  yaw_pid_ki             = 0.3 
+#endif
   yaw_pid_kd             = 0.3 
-  yaw_pid_ki             = 0.3  
   yaw_pid_integral_limit = 0.3 
 
   // Speed PID controller

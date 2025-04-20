@@ -33,6 +33,9 @@ ProcessConfig = uSimMarineV22
 
   start_pos = $(START_POS)
   prefix    = NAV
+
+	turn_rate = 99
+	turn_spd_loss = 0.5
 }
 
 

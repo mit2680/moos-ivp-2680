@@ -33,7 +33,7 @@ MMOD=""
 VNAME="abe"
 COLOR="yellow"
 XMODE="M300"
-START_POS="x=0,y=0,heading=0"  
+START_POS="x=0,y=0,heading=0"
 STOCK_SPD="1.4"
 MAX_SPD="2"
 
