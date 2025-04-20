@@ -181,9 +181,8 @@ if [ "${RAND_SWIMMERS}" != "" -o "${SWIMMERS}" != "" ]; then
 elif [ "${SWIM_REGION}" != "" -o "${UNREGERS}" != "" ]; then
     RAND_SWIM_FILE_MADE="yes"
 fi
-    x
+
 if [ "${RAND_SWIM_FILE_MADE}" = "yes" -a "${SWIM_FILE}" = "" ]; then
-    echo "Got here 2"
     SWIM_FILE="--swim_file=mit_rand.txt"
 fi
 

@@ -88,6 +88,12 @@ done
 #------------------------------------------------------------
 vecho "Setting starting position, speeds, vnames, colors"
 
+VPOS_CNT=`wc -l vpositions.txt | awk '{print $1}'`
+echo "VPOS_CNT = $VPOS_CNT"
+echo "VEHICLE_AMT = $VEHICLE_AMT"
+if [ "${VPOS_CNT}" != "${VEHICLE_AMT}" ]; then
+    rm -f vpositions.txt 
+fi
 if [ "${RAND_VPOS}" = "yes" -o  ! -f "vpositions.txt" ]; then
     pickpos --poly="-2,-8 : 4,-13 : 60,13 : 57,18" --buffer=15 \
             --amt=$VEHICLE_AMT --hdg="170:190" > vpositions.txt
@@ -107,7 +113,7 @@ pickpos --amt=$VEHICLE_AMT --vnames  > vnames.txt
 if [ "${GAME_FORMAT}" = "r2" ]; then
     echo -e "rescue\nrescue" > vroles.txt
     echo -e "abe\nabe"       > vmates.txt
-    echo -e "green\nblue"    > vcolors.txt
+    echo -e "yellow\nred"    > vcolors.txt
 elif [ "${GAME_FORMAT}" = "rs1" ]; then
     echo -e "rescue\nscout" > vroles.txt
     echo -e "abe\nabe"      > vmates.txt
