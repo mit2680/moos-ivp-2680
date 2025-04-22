@@ -6,8 +6,8 @@ MOOSTimeWarp = $(WARP)
 // LongOrigin = -70.330400 
 
 // MIT Sailing Pavilion                                                    
-LatOrigin  = 42.358456  
-LongOrigin = -71.087589 
+LatOrigin  =  42.358436 // 42.358456  
+LongOrigin = -71.087448 // -71.087589 
 
 
 <tag><pHostInfo>
