@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 #------------------------------------------------------------
 #   Script: init_field.sh
 #   Author: M.Benjamin
@@ -132,6 +132,8 @@ fi
 #------------------------------------------------------------
 #  Part 6: Set other aspects of the field, e.g., obstacles
 #------------------------------------------------------------
+pickpos --amt=$VEHICLE_AMT --lfile=rescue_apps.txt > vapps.txt
+
 
 #------------------------------------------------------------
 #  Part 7: If verbose, show file contents
@@ -153,6 +155,8 @@ if [ "${VERBOSE}" != "" ]; then
     echo "--------------------------------------(vprops)"
     echo "vnames.txt:";     cat  vnames.txt
     echo "vcolors.txt:";    cat  vcolors.txt
+    echo "--------------------------------------(vapps)"
+    echo "vapps.txt:";      cat  vapps.txt
     echo -n "Hit any key to continue"
     read ANSWER
 fi
