@@ -5,7 +5,7 @@
 # NAME:  Maintained by Mike Benjamin
 #=======================================================================
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT( IVP_EXTEND )
 
 set (CMAKE_CXX_STANDARD 11)
