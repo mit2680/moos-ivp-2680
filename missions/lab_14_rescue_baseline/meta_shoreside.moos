@@ -15,9 +15,7 @@ Processconfig = ANTLER
   Run = MOOSDB              @ NewConsole = false
 #ifdef LAUNCH_GUI yes
   Run = pMarineViewer	      @ NewConsole = false
-#else
-  Run = pMissionHash    @ NewConsole = false
-	#endif
+#endif
 
 	Run = pLogger             @ NewConsole = false
   Run = pShare              @ NewConsole = false
@@ -28,54 +26,11 @@ Processconfig = ANTLER
   Run = uFldCollisionDetect @ NewConsole = false
   Run = pRealm              @ NewConsole = false
   Run = uFldRescueMgr       @ NewConsole = false
-  Run = pMissionEval        @ NewConsole = false
-  Run = pAutoPoke           @ NewConsole = false
 }
 
 #include plugs.moos <pHostInfo>
 #include plugs.moos <pShare>
 #include plugs.moos <uProcessWatch>
-
-//----------------------------------------------------
-// pAutoPoke Config Block
-
-ProcessConfig = pAutoPoke
-{
-  AppTick    = 2
-  CommsTick  = 2
-
-  flag = DEPLOY_ALL=true
-  flag = MOOS_MANUAL_OVERRIDE_ALL=false
-
-  required_nodes = 2
-}
-
-
-//--------------------------------------------------
-// pMissionEval config block
-
-ProcessConfig = pMissionEval
-{
-  AppTick    = 4
-  CommsTick  = 4
-
-  lead_condition = (UFRM_WINNER != pending)
-  //pass_condition = WPT_FLAG = 5
-
-  mission_form  = rescue_r2
-  report_file   = results.txt
-	report_column = score1=$[UFRM_WINNER_SCORE]
-	report_column = score2=$[UFRM_LOSER_SCORE]
-	report_column = dur=$[UFRM_DUR]
-	report_column = team1=$[UFRM_WINNER_GROUP]
-	report_column = team2=$[UFRM_LOSER_GROUP]
-  report_column = winner=$[UFRM_WINNER_GROUP]
-  report_column = mtype=rescue_r2
-  report_column = mhash_short=$[MHASH_SHORT]
-  report_column = mhash_lshort=$[MHASH_LSHORT]
-
-  result_flag = MISSION_EVALUATED = true
-}
 
 //--------------------------------------------------
 // uQueryDB config block
@@ -130,7 +85,7 @@ ProcessConfig = uFldRescueMgr
 
 	swimmer_color = lime
 
-	finish_upon_win = true
+//	finish_upon_win = true
 	
 	show_rescue_rng = true
 	rescue_rng_transparency = 0.1

@@ -165,8 +165,6 @@ ProcessConfig = pContactMgrV20
   display_radii = false
   alert_range_color = gray70
   cpa_range_color   = gray30
-
-	hold_alerts_for_helm = true
 }
 
 
@@ -190,8 +188,6 @@ ProcessConfig = pNodeReporter
 	platform_length = 3
 	
 	platform_color = $(COLOR)
-
-	platform_group = $(VUSER="grp")
 
 	allow_color_change = true
 }

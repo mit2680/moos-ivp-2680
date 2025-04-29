@@ -32,7 +32,6 @@ NOGUI=""
 
 # Custom: num vehicles/teams
 GAME_FORMAT="r1"
-COMPETE=""
 
 # Custom: on-the-fly swimfile gen
 RAND_SWIMMERS=""
@@ -69,11 +68,10 @@ for ARGI; do
 	echo "  --nogui, -ng       Headless launch, no gui   "
 	echo "                                               "
 	echo "Options (custom: type of competition):         "
-	echo "  --r1, -r1          1 rescue vehicle          " 
-	echo "  --r2, -r2          2 rescue vehicles         " 
+	echo "  --r1, -r1          1 rescue vehcle           " 
+	echo "  --r2, -r2          2 rescue vehcles          " 
 	echo "  --rs1, -rs1        1 rescue 1 scout          " 
 	echo "  --rs2, -rs2        2 teams, resc/scout each  " 
-	echo "  --compete, -c      Competition               "
 	echo "                                               "
 	echo "Options (custom: dynamic swim file):           "
 	echo "  --rsl, -rsl        Rand swim locations       " 
@@ -116,8 +114,6 @@ for ARGI; do
 	XLAUNCHED="yes"
     elif [ "${ARGI}" = "--nogui" -o "${ARGI}" = "-ng" ]; then
 	NOGUI="--nogui"
-    elif [ "${ARGI}" = "--compete" -o "${ARGI}" = "-c" ]; then
-	COMPETE=$ARGI
 
 
     elif [ "${ARGI}" = "--r1" -o "${ARGI}" = "-r1" ]; then
@@ -174,7 +170,6 @@ VNAMES=(`cat vnames.txt`)
 VCOLOR=(`cat vcolors.txt`)
 VROLES=(`cat vroles.txt`)  #custom
 VMATES=(`cat vmates.txt`)  #custom
-VAPPS=(`cat vapps.txt`)  #custom
 
 VAMT=${#VROLES[@]}
 
@@ -216,11 +211,9 @@ if [ "${VERBOSE}" != "" ]; then
     echo "NOGUI =         [${NOGUI}]                  "
     echo "--------------------------------(Custom)----"
     echo "GAME_FORMAT     [${GAME_FORMAT}]            "
-    echo "COMPETE         [${COMPETE}]                "
     echo "MAX_TIME =      [${MAX_TIME}]               "
     echo "VROLES =        [${VROLES[*]}]              "
     echo "VMATES =        [${VMATES[*]}]              "
-    echo "VAPPS =         [${VAPPS[*]}]               "
     echo "--------------------------------(Custom)----"
     echo "SWIM_REGION     [${SWIM_REGION}]            "
     echo "SWIM_FILE       [${SWIM_FILE}]              "
@@ -246,25 +239,6 @@ do
     IVARGS+=" --color=${VCOLOR[$IXX]} "
     IVARGS+=" --vrole=${VROLES[$IXX]} "
     IVARGS+=" --tmate=${VMATES[$IXX]} "
-
-    if [ "${COMPETE}" != "" ]; then
-	VAPP="${VAPPS[$IXX]}"
-	IVARGS+=" --pgr=${VAPP} "
-	vecho "VAPP:[${VAPP}]"
-	AWK6=`echo $VAPP | awk -F '/' '{print $6}'`
-	AWK7=`echo $VAPP | awk -F '/' '{print $7}'`
-
-	VUSER=`echo $AWK6 | awk -F '-' '{print $4}'`
-
-	if [ "${VUSER}" = "" ]; then
-	    VUSER=`echo $AWK7 | awk -F '-' '{print $4}'`
-	fi
-	vecho "AWK6:[${AWK6}]"
-	vecho "AWK7:[${AWK7}]"
-	vecho "VUSER:[${VUSER}]"
-	IVARGS+=" --vuser=${VUSER} "
-    fi
-
     vecho "Launching vehicle: $IVARGS"
 
     CMD="./launch_vehicle.sh $IVARGS"    

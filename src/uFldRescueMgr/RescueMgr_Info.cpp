@@ -156,8 +156,6 @@ void showInterfaceAndExit()
   blk("  RESCUE_REQUEST      = vname=abe                               ");
   blk("  SCOUT_REQUEST       = vname=ben, tmate=abe                    ");
   blk("                                                                ");
-  blk("  DEPLOY_ALL          = true                                    ");
-  blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
   blk("  RESCUED_SWIMMER     = id=07, finder=cal                       ");
