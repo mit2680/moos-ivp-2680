@@ -41,7 +41,7 @@
 using namespace std;
 
 //---------------------------------------------------------
-// Constructor
+// Constructor()
 
 RescueMgr::RescueMgr()
 {
@@ -63,12 +63,13 @@ RescueMgr::RescueMgr()
   m_vname_leader   = "tie";
 
   m_known_unrescued = 0;
+  m_start_time = 0;
   
   m_ac.setMaxEvents(20);
 }
 
 //---------------------------------------------------------
-// Procedure: OnNewMail
+// Procedure: OnNewMail()
 
 bool RescueMgr::OnNewMail(MOOSMSG_LIST &NewMail)
 {
@@ -89,6 +90,10 @@ bool RescueMgr::OnNewMail(MOOSMSG_LIST &NewMail)
       handled = handleMailNodeReport(sval);
     else if(key == "RESCUE_REQUEST")
       handled = handleMailRescueRequest(sval);
+    else if(key == "DEPLOY_ALL") {
+      m_start_time = m_curr_time;
+      handled = true;
+    }
     else if(key == "SCOUT_REQUEST")
       handled = handleMailScoutRequest(sval);
     else if((key == "XSWIMMER_ALERT") && (comm == "shoreside")) {
@@ -142,6 +147,7 @@ void RescueMgr::registerVariables()
   Register("NODE_REPORT_LOCAL", 0);
   Register("RESCUE_REQUEST", 0);
   Register("SCOUT_REQUEST", 0);
+  Register("DEPLOY_ALL", 0);
 }
 
 
@@ -489,7 +495,7 @@ void RescueMgr::updateWinnerStatus(bool finished)
   for(p=m_map_node_rescues.begin(); p!=m_map_node_rescues.end(); p++) {
     string vname = p->first;
     unsigned int rescues = p->second;
-    if(rescues >=  win_thresh)
+    if((rescues >=  win_thresh) && finished)
       winner_vnames.push_back(vname);
   }
 
@@ -528,7 +534,41 @@ void RescueMgr::updateWinnerStatus(bool finished)
     return;
 
   m_vname_winner = would_be_winner;
+  m_vname_loser = "unknown";
+
+  // find the
+  unsigned int high_losing_score = 0;
+  map<string, unsigned int>::iterator p2;
+  for(p2=m_map_node_rescues.begin(); p2!=m_map_node_rescues.end(); p2++) {
+    string vname = p2->first;
+    unsigned int rescues = p2->second;
+    if((m_vname_winner != vname) && (rescues >= high_losing_score)) {
+      m_vname_loser = vname;
+      high_losing_score = rescues;
+    }
+  }
+
   Notify("UFRM_WINNER", m_vname_winner);
+  Notify("UFRM_LOSER", m_vname_loser);
+
+  string winner_group = m_map_node_records[m_vname_winner].getGroup();
+  if(winner_group != "")
+    Notify("UFRM_WINNER_GROUP", winner_group);
+  else
+    Notify("UFRM_WINNER_GROUP", m_vname_winner);
+  Notify("UFRM_WINNER_SCORE", m_map_node_rescues[m_vname_winner]);
+
+  string loser_group = m_map_node_records[m_vname_loser].getGroup();
+  if(loser_group != "")
+    Notify("UFRM_LOSER_GROUP", loser_group);
+  else
+    Notify("UFRM_LOSER_GROUP", m_vname_loser);
+  Notify("UFRM_LOSER_SCORE", m_map_node_rescues[m_vname_loser]);
+
+  double duration = m_curr_time - m_start_time;
+  duration = snapToStep(duration, 0.1);
+  Notify("UFRM_DUR", duration);
+
   postFlags(m_winner_flags);
 }
 
@@ -578,11 +618,18 @@ void RescueMgr::updateFinishStatus()
   if(m_known_unrescued == 0)
     finished = true;
 
+  //cout << "m_finish_upon_win:" << boolToString(m_finish_upon_win) << endl;
+  //cout << "m_known_unrescued:" << uintToString(m_known_unrescued) << endl;
+  //cout << "m_scouts_inplay:" << boolToString(m_scouts_inplay) << endl;
+  //cout << "m_vname_winner:" << m_vname_winner << endl;
+  
   // Second criteria if no scouts in play, and a majority has been
   // rescued by one team (winner declared), AND finish_upon_win is
   // set to true, then we can finish.
   if(m_finish_upon_win && (m_vname_winner != "") && !m_scouts_inplay)
     finished = true;
+  //cout << "finished:" << boolToString(finished) << endl;
+  
   if(!finished)
     return;
       
@@ -1105,12 +1152,13 @@ bool RescueMgr::buildReport()
   m_msgs << "======================================" << endl;
   m_msgs << "RescueMgr Configuration "                 << endl;
   m_msgs << "======================================" << endl;
-  m_msgs << "rescue_rng_min: " << str_rng_min << endl;
-  m_msgs << "rescue_rng_max: " << str_rng_max << endl;
-  m_msgs << "rescue_rng_pd:  " << str_rng_pd  << endl;
+  m_msgs << "rescue_rng_min:  " << str_rng_min << endl;
+  m_msgs << "rescue_rng_max:  " << str_rng_max << endl;
+  m_msgs << "rescue_rng_pd:   " << str_rng_pd  << endl;
   m_msgs << "rescue_rng_show: " << boolToString(m_rescue_rng_show) << endl;
-  m_msgs << "transparency:   " << str_trans            << endl;
-  m_msgs << "swim_file:      " << m_swimset.getSwimFile()  << endl;
+  m_msgs << "transparency:    " << str_trans            << endl;
+  m_msgs << "swim_file:       " << m_swimset.getSwimFile()  << endl;
+  m_msgs << "finish_upon_win: " << boolToString(m_finish_upon_win)  << endl;
   m_msgs << endl;
   
 

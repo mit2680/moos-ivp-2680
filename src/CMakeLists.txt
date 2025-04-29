@@ -86,7 +86,6 @@ IF( EXISTS ${CMAKE_SOURCE_DIR}/src/lib_swimmers )
   ADD_SUBDIRECTORY(lib_swimmers)
 ENDIF()
 
-
 IF("${BUILD_BOT_CODE_ONLY}" STREQUAL "OFF")
   IF( EXISTS ${CMAKE_SOURCE_DIR}/src/app_swimview )
      ADD_SUBDIRECTORY(app_swimview)
