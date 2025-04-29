@@ -81,7 +81,8 @@ class RescueMgr : public AppCastingMOOSApp
   void  postRangePolys(std::string vname, std::string tag, bool active);
   void  postSwimMarkers();
   void  postSwimMarker(std::string sname);
-
+  void  postGameStatus();
+  
   void  postFlags(const std::vector<VarDataPair>& flags);
   void  broadcastSwimmers();
 
@@ -116,17 +117,21 @@ class RescueMgr : public AppCastingMOOSApp
   // Key for this map is the scout vname
   std::map<std::string, std::string>  m_map_node_tmate;
   
-  
   // Notables map key is vname to list of recent swimmers rescued
   std::map<std::string, std::list<std::string> > m_map_notables;
   
   unsigned int m_total_rescuers;
   std::string  m_vname_leader;
   std::string  m_vname_winner;
+  std::string  m_vname_loser;
   bool         m_finished;
   bool         m_scouts_inplay;
   
   unsigned int m_known_unrescued;
+
+  double       m_start_time;
+
+  std::string  m_game_status;
   
  protected: // Configuration variables
 
