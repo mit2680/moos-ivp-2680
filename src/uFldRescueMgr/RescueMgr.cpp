@@ -37,6 +37,7 @@
 #include "FileBuffer.h"
 #include "XYFormatUtilsPoly.h"
 #include "XYPolyExpander.h"
+#include "XYTextBox.h"
 
 using namespace std;
 
@@ -54,6 +55,9 @@ RescueMgr::RescueMgr()
   m_rescue_rng_show = true;
   m_finish_upon_win = false;
   m_swimmer_color   = "dodger_blue";
+  m_show_game_text  = true;
+  m_game_text_x     = 50;
+  m_game_text_y     = -120;
 
   // State vars
   m_finished       = false;
@@ -205,6 +209,12 @@ bool RescueMgr::OnStartUp()
     }
     else if(param == "show_rescue_rng")
       handled = setBooleanOnString(m_rescue_rng_show, value);
+    else if(param == "show_game_text")
+      handled = setBooleanOnString(m_show_game_text, value);
+    else if(param == "game_text_x")
+      handled = setDoubleOnString(m_game_text_x, value);
+    else if(param == "game_text_y")
+      handled = setDoubleOnString(m_game_text_y, value);
     else if(param == "rescue_rng_min")
       handled = handleConfigRescueRangeMin(value);
     else if(param == "rescue_rng_max")
@@ -914,9 +924,17 @@ void RescueMgr::postGameStatus()
     game_status += team + "=" + uintToString(m_map_node_rescues[vname]);
   }
   
-  if(game_status != m_game_status) {
+  if((game_status != "") && (game_status != m_game_status)) {
     Notify("UFRM_GAME_STATUS", game_status);
     m_game_status = game_status;
+
+    if(m_show_game_text) {
+      XYTextBox tbox(m_game_text_x, m_game_text_y, "gamestat");
+      tbox.setMsg(game_status);
+      tbox.setFSize(18);
+      tbox.setMColor("light_green");
+      Notify("VIEW_TEXTBOX", tbox.get_spec()); 
+    }
   }
 }
 

@@ -281,6 +281,9 @@ SARGS=" --auto --mport=9000 --pshare=9200 $NOGUI "
 SARGS+=" $TIME_WARP $JUST_MAKE $VERBOSE "
 SARGS+=" $MMOD "
 SARGS+=" $MAX_TIME $SWIM_FILE"
+if [ "${XLAUNCHED}" = "yes" ]; then
+    SARGS+=" --auto"
+fi
 vecho "Launching shoreside: $SARGS"
 ./launch_shoreside.sh $SARGS 
 

@@ -237,6 +237,7 @@ nsplug meta_vehicle.bhv targ_$VNAME.bhv $NSFLAGS         \
        START_POS=$START_POS         VNAME=$VNAME         \
        STOCK_SPD=$STOCK_SPD         MMOD=$MMOD           \
        COLOR=$COLOR                 VROLE=$VROLE         \
+       AUTO_LAUNCHED=$AUTO_LAUNCHED                      \
        TMATE=$TMATE
 
 if [ "${JUST_MAKE}" = "yes" ]; then

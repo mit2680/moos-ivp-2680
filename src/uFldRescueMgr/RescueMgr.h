@@ -132,6 +132,8 @@ class RescueMgr : public AppCastingMOOSApp
   double       m_start_time;
 
   std::string  m_game_status;
+  double       m_game_text_x;
+  double       m_game_text_y;
   
  protected: // Configuration variables
 
@@ -145,10 +147,11 @@ class RescueMgr : public AppCastingMOOSApp
 
   std::string m_swimmer_color;
 
-  bool   m_finish_upon_win;
-  
+  bool   m_finish_upon_win;  
   bool   m_rescue_rng_show;
   double m_rescue_rng_transparency;
+
+  bool   m_show_game_text;
 };
 
 #endif 

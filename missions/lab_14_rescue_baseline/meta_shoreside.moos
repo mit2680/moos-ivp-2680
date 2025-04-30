@@ -29,7 +29,9 @@ Processconfig = ANTLER
   Run = pRealm              @ NewConsole = false
   Run = uFldRescueMgr       @ NewConsole = false
   Run = pMissionEval        @ NewConsole = false
+#ifdef AUTO_LAUNCHED yes
   Run = pAutoPoke           @ NewConsole = false
+#endif
 }
 
 #include plugs.moos <pHostInfo>
