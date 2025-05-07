@@ -526,14 +526,28 @@ void RescueMgr::updateWinnerStatus(bool finished)
   if(winner_vnames.size() > 1) {
     string first_winner;
     double first_winner_utc = 0;
+    unsigned int first_winner_rescues = 0;
     map<string, double>::iterator q;
     for(q=m_map_node_last_rescue_utc.begin();
 	q!=m_map_node_last_rescue_utc.end(); q++) {
+
       string vname = q->first;
       double utc = q->second;
-      if((first_winner == "") || (utc < first_winner_utc)) {
+      unsigned int rescues = m_map_node_rescues[vname];
+
+      bool this_is_winner = false;
+      if(first_winner == "") 
+	this_is_winner = true;
+      else if(rescues > first_winner_rescues) 
+	this_is_winner = true;
+      else if((rescues == first_winner_rescues) &&
+	      (utc < first_winner_utc))
+	this_is_winner = true;
+	
+      if(this_is_winner) {
 	first_winner = vname;
 	first_winner_utc = utc;
+	first_winner_rescues = rescues;
       }
     }
     would_be_winner = first_winner;
