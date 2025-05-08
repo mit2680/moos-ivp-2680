@@ -147,7 +147,8 @@ done
 #  Part 4: If Heron hardware, set key info based on IP address
 #------------------------------------------------------------
 if [ "${XMODE}" = "M300" ]; then
-    COLOR=`get_heron_info.sh --color --hint=$COLOR`
+#    COLOR=`get_heron_info.sh --color --hint=$COLOR`
+    COLOR=`get_heron_info.sh --color`
     IP_ADDR=`get_heron_info.sh --ip`
     FSEAT_IP=`get_heron_info.sh --fseat`
     VNAME=`get_heron_info.sh --name`
