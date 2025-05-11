@@ -178,6 +178,16 @@ VAPPS=(`cat vapps.txt`)  #custom
 
 VAMT=${#VROLES[@]}
 
+#echo "0: ${VAPPS[0]}"
+#echo "1: ${VAPPS[1]}"
+
+#if [ ${VAPPS[0]} != $USER1 -a ${VAPPS[1]} != $USER1 -a \
+#     ${VAPPS[0]} != $USER2 -a ${VAPPS[1]} != $USER2 -a \
+#     ${VAPPS[0]} != $USER3 -a ${VAPPS[1]} != $USER3 ]; then
+#    exit 1
+#fi
+
+
 # If a newly random swim_file was created, but the name was
 # not specified, use the default name, "mit_rand.txt"
 RAND_SWIM_FILE_MADE=""
@@ -236,6 +246,7 @@ fi
 #-------------------------------------------------------------
 VARGS=" --sim --auto --max_spd=$MAX_SPD $MMOD "
 VARGS+=" $TIME_WARP $JUST_MAKE $VERBOSE "
+LOGLINE=""
 for IX in `seq 1 $VAMT`;
 do
     IXX=$(($IX - 1))
@@ -248,7 +259,7 @@ do
     IVARGS+=" --tmate=${VMATES[$IXX]} "
 
     if [ "${COMPETE}" != "" ]; then
-	VAPP="${VAPPS[$IXX]}"
+	VAPP="${VAPPS[$IXX]}/bin/pGenRescue"
 	IVARGS+=" --pgr=${VAPP} "
 	vecho "VAPP:[${VAPP}]"
 	AWK6=`echo $VAPP | awk -F '/' '{print $6}'`
@@ -263,8 +274,16 @@ do
 	vecho "AWK7:[${AWK7}]"
 	vecho "VUSER:[${VUSER}]"
 	IVARGS+=" --vuser=${VUSER} "
+
+	LOGLINE+="user=$VUSER "
+	BHV_DIR=`./get_scout.sh $VAPP`
+	IVARGS+=" --bdir=${BHV_DIR} "
     fi
 
+    if [ "$LOGLINE" != "" ]; then
+	echo -n $LOGLINE >> .runlog
+    fi
+    
     vecho "Launching vehicle: $IVARGS"
 
     CMD="./launch_vehicle.sh $IVARGS"    

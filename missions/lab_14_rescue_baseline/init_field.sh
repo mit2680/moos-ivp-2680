@@ -132,8 +132,11 @@ fi
 #------------------------------------------------------------
 #  Part 6: Set other aspects of the field, e.g., obstacles
 #------------------------------------------------------------
-pickpos --amt=$VEHICLE_AMT --lfile=rescue_apps.txt > vapps.txt
+#pickpos --amt=$VEHICLE_AMT --lfile=rescue_apps.txt > vapps.txt
+pickpos --amt=2 --lfile=rescue_apps.txt > vapps.txt
 
+cat vapps.txt vapps.txt >> new.txt
+mv new.txt vapps.txt
 
 #------------------------------------------------------------
 #  Part 7: If verbose, show file contents

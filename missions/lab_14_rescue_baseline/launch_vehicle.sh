@@ -43,6 +43,7 @@ SPEED="1.0"
 RETURN_POS="5,0"
 MAXSPD="2"
 PGR="pGenRescue"
+BHV_DIR=""
 VUSER=""
 
 TMATE=""
@@ -88,6 +89,8 @@ for ARGI; do
 	echo "    Name of the teammate vehicle if applicable   "
 	echo "  --pgr=<app>                                    " 
 	echo "    Full path of version of pGenRescue           "
+	echo "  --bdir=<bdir>                                  " 
+	echo "    Full path of lib for Scout behavior          "
 	echo "  --vuser=<vuser>                                " 
 	echo "    Name of the user if competing                "
 	exit 0;
@@ -134,6 +137,8 @@ for ARGI; do
         TMATE="${ARGI#--tmate=*}"
     elif [ "${ARGI:0:6}" = "--pgr=" ]; then
         PGR="${ARGI#--pgr=*}"
+    elif [ "${ARGI:0:7}" = "--bdir=" ]; then
+        BHV_DIR="${ARGI#--bdir=*}"
     elif [ "${ARGI:0:8}" = "--vuser=" ]; then
         VUSER="${ARGI#--vuser=*}"
 
@@ -202,6 +207,7 @@ if [ "${VERBOSE}" = "yes" ]; then
     echo "VROLE =         [${VROLE}]        "
     echo "TMATE =         [${TMATE}]        "
     echo "PGR =           [${PGR}]          "
+    echo "BHV_DIR =       [${BHV_DIR}]      "
     echo "VUSER =         [${VUSER}]        "
     echo -n "Hit any key to continue launching $VNAME "
     read ANSWER
@@ -232,6 +238,7 @@ nsplug meta_vehicle.moos targ_$VNAME.moos $NSFLAGS WARP=$TIME_WARP \
        MMOD=$MMOD                                        \
        VROLE=$VROLE                 TMATE=$TMATE         \
        PGR=$PGR                     VUSER=$VUSER         \
+       BHV_DIR=$BHV_DIR                                  \
        FSEAT_IP=$FSEAT_IP
 
 nsplug meta_vehicle.bhv targ_$VNAME.bhv $NSFLAGS         \

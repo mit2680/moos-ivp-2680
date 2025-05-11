@@ -66,6 +66,7 @@ ProcessConfig = pMissionEval
 
   mission_form  = rescue_r2
   report_file   = results.txt
+
 	report_column = score1=$[UFRM_WINNER_SCORE]
 	report_column = score2=$[UFRM_LOSER_SCORE]
 	report_column = dur=$[UFRM_DUR]
@@ -135,7 +136,9 @@ ProcessConfig = uFldRescueMgr
 
 	swimmer_color = lime
 
-	finish_upon_win = true
+	finish_upon_win = false
+
+	max_game_duration = 1100
 	
 	show_rescue_rng = true
 	rescue_rng_transparency = 0.1
