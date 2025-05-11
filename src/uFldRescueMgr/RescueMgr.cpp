@@ -70,6 +70,9 @@ RescueMgr::RescueMgr()
   m_start_time = 0;
   
   m_ac.setMaxEvents(20);
+
+  m_duration = 0;
+  m_max_game_duration = -1;
 }
 
 //---------------------------------------------------------
@@ -162,6 +165,9 @@ bool RescueMgr::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
+  m_duration = m_curr_time - m_start_time;
+  m_duration = snapToStep(m_duration, 0.1);
+  
   if(!m_finished) {
     tryRescues();
     tryScouts();
@@ -233,6 +239,8 @@ bool RescueMgr::OnStartUp()
       handled = setColorOnString(m_swimmer_color, value);
     else if(param == "finish_upon_win") 
       handled = setBooleanOnString(m_finish_upon_win, value);
+    else if(param == "max_game_duration") 
+      handled = setDoubleOnString(m_max_game_duration, value);
 
     if(!handled) {
       reportUnhandledConfigWarning(orig);
@@ -590,9 +598,7 @@ void RescueMgr::updateWinnerStatus(bool finished)
     Notify("UFRM_LOSER_GROUP", m_vname_loser);
   Notify("UFRM_LOSER_SCORE", m_map_node_rescues[m_vname_loser]);
 
-  double duration = m_curr_time - m_start_time;
-  duration = snapToStep(duration, 0.1);
-  Notify("UFRM_DUR", duration);
+  Notify("UFRM_DUR", m_duration);
 
   postFlags(m_winner_flags);
 }
@@ -654,6 +660,11 @@ void RescueMgr::updateFinishStatus()
   if(m_finish_upon_win && (m_vname_winner != "") && !m_scouts_inplay)
     finished = true;
   //cout << "finished:" << boolToString(finished) << endl;
+
+  if(m_max_game_duration > 0) {
+    if(m_duration > m_max_game_duration)
+      finished = true;
+  }
   
   if(!finished)
     return;
@@ -1221,6 +1232,7 @@ bool RescueMgr::buildReport()
   m_msgs << "transparency:    " << str_trans            << endl;
   m_msgs << "swim_file:       " << m_swimset.getSwimFile()  << endl;
   m_msgs << "finish_upon_win: " << boolToString(m_finish_upon_win)  << endl;
+  m_msgs << "max_duration:    " << doubleToStringX(m_max_game_duration,1)  << endl;
   m_msgs << endl;
   
 
@@ -1240,6 +1252,7 @@ bool RescueMgr::buildReport()
   m_msgs << "Leader vehicle: " << m_vname_leader << endl;     
   m_msgs << "Winner vehicle: " << m_vname_winner << endl;     
   m_msgs << "Mission Finished: " << finished_str << endl;     
+  m_msgs << "Duration: " << doubleToString(m_duration,1) << endl;     
   m_msgs << endl;
   
   map<string, NodeRecord>::iterator q;

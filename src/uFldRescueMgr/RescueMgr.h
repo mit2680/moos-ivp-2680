@@ -152,6 +152,10 @@ class RescueMgr : public AppCastingMOOSApp
   double m_rescue_rng_transparency;
 
   bool   m_show_game_text;
+
+  double m_duration; 
+  double m_max_game_duration;
+  
 };
 
 #endif 
