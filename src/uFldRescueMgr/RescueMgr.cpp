@@ -165,8 +165,10 @@ bool RescueMgr::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
-  m_duration = m_curr_time - m_start_time;
-  m_duration = snapToStep(m_duration, 0.1);
+  if(m_start_time > 0) {
+    m_duration = m_curr_time - m_start_time;
+    m_duration = snapToStep(m_duration, 0.1);
+  }
   
   if(!m_finished) {
     tryRescues();
@@ -182,6 +184,11 @@ bool RescueMgr::Iterate()
     broadcastSwimmers();
     applyTMateColors();
     m_last_broadcast = m_curr_time;
+  }
+  
+  if(m_max_game_duration > 0) {
+    if(m_duration > m_max_game_duration)
+      updateFinishStatus();
   }
   
   AppCastingMOOSApp::PostReport();
@@ -518,12 +525,21 @@ void RescueMgr::updateWinnerStatus(bool finished)
       winner_vnames.push_back(vname);
   }
 
-  // Part 4: If no winners then done for now
+  // Part 4: If no winners by threshold
   if(winner_vnames.size() == 0) {
-    Notify("UFRM_WINNER", "pending");
-    return;
+    if(!finished) {
+      Notify("UFRM_WINNER", "pending");
+      return;
+    }
   }
 
+  // Added May 11, 2025
+  if(finished) {
+    string vname = winnerByRescues();
+    winner_vnames.clear();
+    winner_vnames.push_back(vname);
+  }
+    
   string would_be_winner;
   
   // Part 5: If one winner, set the winner
@@ -604,6 +620,39 @@ void RescueMgr::updateWinnerStatus(bool finished)
 }
 
 //------------------------------------------------------------
+// Procedure: winnerByRescues()
+
+string RescueMgr::winnerByRescues()
+{
+  string winner;
+  unsigned int winner_rescues = 0;
+  double winner_utc = 0;
+  map<string, unsigned int>::iterator p;
+  for(p=m_map_node_rescues.begin(); p!=m_map_node_rescues.end(); p++) {
+    bool new_winner = false;
+    string vname = p->first;
+    unsigned int rescues = p->second;
+    double utc = m_map_node_last_rescue_utc[vname];
+
+      if((winner == "") || (winner_rescues == 0))
+      new_winner = true;
+    else if(rescues > winner_rescues)
+      new_winner = true;
+    else if(rescues == winner_rescues) {
+      if(utc < winner_utc)
+	new_winner = true;
+    }
+
+    if(new_winner) {
+      winner = vname;
+      winner_rescues = rescues;
+      winner_utc = utc;
+    }
+  }
+  return(winner);
+}
+
+  //------------------------------------------------------------
 // Procedure: updateFinishStatus()
 //   Purpose: Completion is when all KNOWN swimmers have been
 //            rescued. A swimmer is known if either (a) it is
@@ -649,11 +698,6 @@ void RescueMgr::updateFinishStatus()
   if(m_known_unrescued == 0)
     finished = true;
 
-  //cout << "m_finish_upon_win:" << boolToString(m_finish_upon_win) << endl;
-  //cout << "m_known_unrescued:" << uintToString(m_known_unrescued) << endl;
-  //cout << "m_scouts_inplay:" << boolToString(m_scouts_inplay) << endl;
-  //cout << "m_vname_winner:" << m_vname_winner << endl;
-  
   // Second criteria if no scouts in play, and a majority has been
   // rescued by one team (winner declared), AND finish_upon_win is
   // set to true, then we can finish.
@@ -671,7 +715,7 @@ void RescueMgr::updateFinishStatus()
       
     
   m_finished = true;  
-  Notify("UFRM_FINISHED", boolToString(m_finished));
+  Notify("UFRM_FINISHED", "true");
   postFlags(m_finish_flags);
 
   updateWinnerStatus(true);

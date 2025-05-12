@@ -73,6 +73,8 @@ class RescueMgr : public AppCastingMOOSApp
   void  updateLeaderStatus();
   void  updateWinnerStatus(bool finished=false);
   void  updateFinishStatus();
+
+  std::string winnerByRescues();
   
   bool  rollDice(std::string vname, std::string, std::string dtype);
 
