@@ -138,7 +138,7 @@ ProcessConfig = uFldRescueMgr
 
 	finish_upon_win = false
 
-	max_game_duration = 1100
+	max_game_duration = 950
 	
 	show_rescue_rng = true
 	rescue_rng_transparency = 0.1
