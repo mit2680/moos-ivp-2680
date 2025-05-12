@@ -59,7 +59,7 @@ elif [[ "${VAPP}" == *"ews2011"* ]]; then
 elif [[ "${VAPP}" == *"bertucci"* ]]; then
     echo "$ROOT_DIR/01-moos-ivp-rjkang17/lib/"
 
-elif [[ "${VAPP}" == *"ekwang"* ]]; then
+elif [[ "${VAPP}" == *"adamc710"* ]]; then
     echo "$ROOT_DIR/07-moos-ivp-adamc710/lib/"
     
 fi

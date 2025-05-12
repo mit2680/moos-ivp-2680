@@ -6,5 +6,5 @@
 /Users/mikerb/Research/autotest/harnesses_2680/12-moos-ivp-chthigpen
 /Users/mikerb/Research/autotest/harnesses_2680/14-moos-ivp-cdembski
 /Users/mikerb/Research/autotest/harnesses_2680/15-moos-ivp-jwenger
-/Users/mikerb/Research/autotest/harnesses_2680/17-moos-ivp-ekwang
+/Users/mikerb/Research/autotest/harnesses_2680/07-moos-ivp-adamc710
 /Users/mikerb/Research/autotest/harnesses_2680/20-moos-ivp-bruno752
