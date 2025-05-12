@@ -9,7 +9,7 @@
 ME=`basename "$0"`
 
 user_array=("cdembski" "cschnorr" "ews2011" )
-user_array+=("jwenger"  "bertucci" "ekwang"  )
+user_array+=("jwenger"  "bertucci" "adamc710"  )
 user_array+=("thoma904" "bruno752" "jcizu690")
 user_array+=("chthigpen")
 
