@@ -24,7 +24,6 @@ VAMT="2"
 MAX_VAMT="2"
 RAND_VPOS=""
 MAX_SPD="1.2"
-MMOD=""
 
 # Monte
 XLAUNCHED="no"
@@ -48,7 +47,6 @@ for ARGI; do
 	echo "  --amt=N            Num vehicles to launch    "
 	echo "  --rand, -r         Rand vehicle positions    "
 	echo "  --max_spd=N        Max helm/sim speed        "
-        echo "  --mmod=<mod>       Mission variation/mod     "
 	echo "                                               "
 	echo "Options (monte):                               "
 	echo "  --xlaunched, -x    Launched by xlaunch       "
@@ -74,8 +72,6 @@ for ARGI; do
         RAND_VPOS=$ARGI
     elif [ "${ARGI:0:10}" = "--max_spd=" ]; then
         MAX_SPD="${ARGI#--max_spd=*}"
-    elif [ "${ARGI:0:7}" = "--mmod=" ]; then
-        MMOD=$ARGI
 
     elif [ "${ARGI}" = "--xlaunched" -o "${ARGI}" = "-x" ]; then
 	XLAUNCHED="yes"
@@ -100,6 +96,8 @@ SPEEDS=(`cat vspeeds.txt`)
 VNAMES=(`cat vnames.txt`)
 VCOLOR=(`cat vcolors.txt`)
 
+ALL_VNAMES=""
+
 #------------------------------------------------------------
 #  Part 5: If verbose, show vars and confirm before launching
 #------------------------------------------------------------
@@ -115,7 +113,6 @@ if [ "${VERBOSE}" != "" ]; then
     echo "MAX_VAMT =      [${MAX_VAMT}]               "
     echo "RAND_VPOS =     [${RAND_VPOS}]              "
     echo "MAX_SPD =       [${MAX_SPD}]                "
-    echo "MMOD =          [${MMOD}]                   "
     echo "--------------------------------(VProps)----"
     echo "VNAMES =        [${VNAMES[*]}]              "
     echo "VCOLORS =       [${VCOLOR[*]}]              "
@@ -133,7 +130,7 @@ fi
 #------------------------------------------------------------
 #  Part 6: Launch the Vehicles
 #------------------------------------------------------------
-VARGS=" --sim --auto --max_spd=$MAX_SPD $MMOD "
+VARGS=" --sim --auto --max_spd=$MAX_SPD "
 VARGS+=" $TIME_WARP $JUST_MAKE $VERBOSE "
 for IX in `seq 1 $VAMT`;
 do
@@ -146,6 +143,11 @@ do
     IVARGS+=" --color=${VCOLOR[$IXX]} "
     vecho "Launching vehicle: $IVARGS"
 
+    if [ "${ALL_VNAMES}" != "" ]; then
+	ALL_VNAMES+=":"
+    fi
+    ALL_VNAMES+="$VNAME"
+
     CMD="./launch_vehicle.sh $IVARGS"    
     eval $CMD
     sleep 0.5
@@ -155,9 +157,8 @@ done
 #------------------------------------------------------------
 #  Part 7: Launch the Shoreside mission file
 #------------------------------------------------------------
-SARGS=" --auto --mport=9000 --pshare=9200 $NOGUI "
+SARGS=" --auto --mport=9000 --pshare=9200 $NOGUI --vnames=$ALL_VNAMES "
 SARGS+=" $TIME_WARP $JUST_MAKE $VERBOSE "
-SARGS+=" $MMOD "
 vecho "Launching shoreside: $SARGS"
 ./launch_shoreside.sh $SARGS 
 
