@@ -1,8 +1,7 @@
 #!/bin/bash
-
-#----------------------------------------------------------                               
-#  Script: build.sh                                                                      
-#  Author: Michael Benjamin                                                               
+#----------------------------------------------------------
+#  Script: build.sh                
+#  Author: Michael Benjamin                            
 #---------------------------------------------------------- 
 
 INVOCATION_ABS_DIR=`pwd`
