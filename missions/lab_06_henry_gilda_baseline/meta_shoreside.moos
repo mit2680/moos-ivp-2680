@@ -1,11 +1,11 @@
 //*******************************************************
-// ShoreSide Configuration File
+// ShoreSide Config File
 
 ServerHost = localhost
-ServerPort = $(VPORT)
-Community  = $(VNAME)
+ServerPort = 9000
+Community  = shoreside
 
-#include plug_origin_warp.moos
+#include plugs.moos <origin_warp>
   
 //--------------------------------------------------------
 Processconfig = ANTLER
@@ -13,6 +13,7 @@ Processconfig = ANTLER
   MSBetweenLaunches = 100
 
   Run = MOOSDB          @ NewConsole = false
+  Run = uProcessWatch   @ NewConsole = false
   Run = pRealm          @ NewConsole = false
   Run = pMarineViewer   @ NewConsole = false
   Run = pLogger         @ NewConsole = false
@@ -22,17 +23,17 @@ Processconfig = ANTLER
   Run = pRealm          @ NewConsole = false
 }
 
-#include plug_pShare.moos
-#include plug_pHostInfo.moos
-#include plug_pLogger.moos
+#include plugs.moos <pShare>
+#include plugs.moos <pHostInfo>
+#include plugs.moos <uProcessWatch>
 
 //--------------------------------------------------
-// uFldShoreBroker Configuration Block
+// uFldShoreBroker Config Block
 
 ProcessConfig = uFldShoreBroker
 {
-  AppTick       = 1
-  CommsTick     = 1
+  AppTick   = 1
+  CommsTick = 1
 
   qbridge  = DEPLOY, NODE_REPORT
   qbridge  = STATION_KEEP, APPCAST_REQ
@@ -42,7 +43,30 @@ ProcessConfig = uFldShoreBroker
   bridge   = src=RETURN_$V,  alias=RETURN
 }
 
+//--------------------------------------------------
+// pLogger Config Block
+
+ProcessConfig = pLogger
+{
+  AppTick 	= 10
+  CommsTick = 10
+  
+  File		  = XLOG_SHORESIDE
+  PATH      = ./
+  SyncLog 	= true @ 0.2
+  AsyncLog 	= true
+  FileTimeStamp = true
+
+  // Log it all!!!!!
+  LogAuxSrc = true
+  WildCardLogging = true 
+
+  CompressAlogs = false
+}
+
 //--------------------------------------------------------
+// pMarineViewer Config Block
+
 ProcessConfig = pMarineViewer
 {
   AppTick    = 4
@@ -78,3 +102,5 @@ ProcessConfig = pMarineViewer
 
   button_three = STATION  # STATION_KEEP_ALL=true
 }
+
+

@@ -1,0 +1,59 @@
+// plugs.moos 
+// (1) The plugs.moos file contains plugs that may be included
+//     in both meta_vehicle.moos and meta_shoreside.moos files.
+// (2) The nsplug utility uses the <tag><block> as a delimeter.
+//     #include plugs.moos <tag> will only include the block
+//     below the matching tag up to another line begining
+//     with <tag>.
+	
+<tag><origin_warp>
+MOOSTimeWarp = $(WARP)
+LatOrigin    = 43.825300 
+LongOrigin   = -70.330400 
+
+<tag><pHostInfo>
+//--------------------------------------------------
+// pHostInfo Block
+
+ProcessConfig = pHostInfo
+{
+  AppTick   = 1
+  CommsTick = 1
+
+#ifdef IP_ADDR
+   default_hostip_force = $(IP_ADDR)
+#endif
+
+}
+
+<tag><pShare>
+//---------------------------------------------------------
+// pShare Config Block 
+
+ProcessConfig = pShare
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  input = route =  $(IP_ADDR):$(PSHARE_PORT)
+}
+
+<tag><uProcessWatch>
+//--------------------------------------------------------
+// uProcessWatch config block
+
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+  
+	allow_retractions = true
+
+	watch_all = true
+  nowatch   = uMAC*
+  nowatch   = uXMS*
+  nowatch   = uPokeDB*
+  nowatch   = uMAC*
+
+	summary_wait = 10
+}
