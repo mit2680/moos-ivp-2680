@@ -58,7 +58,7 @@ Behavior = BHV_Waypoint
       speed = 1.3
      radius = 3.0
   nm_radius = 15.0
-     points = $(START_POS)
+     points = start
        lead = 8
 }
 

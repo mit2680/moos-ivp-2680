@@ -148,7 +148,3 @@ ProcessConfig = pLogger
 
   CompressAlogs = false
 }
-
-#include plug_uProcessWatch.moos
-#include plug_pShare.moos
-#include plug_pHostInfo.moos
