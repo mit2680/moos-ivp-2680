@@ -1,5 +1,5 @@
 //*******************************************************
-// ShoreSide Configuration File
+// ShoreSide Config File
 
 ServerHost = localhost
 ServerPort = 9000

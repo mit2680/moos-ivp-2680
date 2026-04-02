@@ -58,7 +58,7 @@ ProcessConfig = pHelmIvP
 
   ok_skew     = any
 
-  app_logging = true
+  //app_logging = true
   behaviors   = targ_$(VNAME).bhv  
   verbose     = false
   domain      = course:0:359:360

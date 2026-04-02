@@ -45,7 +45,7 @@ ProcessConfig = uFldNodeBroker
 }
 
 //------------------------------------------------------
-// uSimMarineV22 config block
+// uSimMarineV22 Config Block
 
 ProcessConfig = uSimMarineV22
 {

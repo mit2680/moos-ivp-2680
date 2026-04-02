@@ -1,3 +1,6 @@
+//*******************************************************
+// Vehicle Config File
+
 ServerHost = localhost
 ServerPort = $(MOOS_PORT)
 Community  = $(VNAME)

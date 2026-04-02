@@ -66,7 +66,7 @@ ProcessConfig = uSimMarineV22
   AppTick   = 10
   CommsTick = 10
 
-  start_pos = $(START_POS), 0
+  start_pos = $(START_POS)
   prefix    = NAV
 
   max_speed = $(MAX_SPD)

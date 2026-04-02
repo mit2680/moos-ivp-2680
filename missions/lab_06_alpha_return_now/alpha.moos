@@ -22,19 +22,19 @@ ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
 
-  Run = MOOSDB          @ NewConsole = false
-  Run = pRealm          @ NewConsole = false
-  Run = pLogger         @ NewConsole = false
-  Run = uSimMarine	    @ NewConsole = false
-  Run = pMarinePID      @ NewConsole = false
-  Run = pHelmIvP        @ NewConsole = false
-  Run = pMarineViewer	  @ NewConsole = false
-  Run = uProcessWatch	  @ NewConsole = false
-  Run = pNodeReporter	  @ NewConsole = false
+  Run = MOOSDB        @ NewConsole = false
+  Run = pRealm        @ NewConsole = false
+  Run = pLogger       @ NewConsole = false
+  Run = uSimMarineV22	@ NewConsole = false
+  Run = pMarinePIDV22 @ NewConsole = false
+  Run = pHelmIvP      @ NewConsole = false
+  Run = pMarineViewer	@ NewConsole = false
+  Run = uProcessWatch @ NewConsole = false
+  Run = pNodeReporter	@ NewConsole = false
 }
 
 //------------------------------------------
-// pLogger config block
+// pLogger Config Block
 
 ProcessConfig = pLogger
 {
@@ -57,7 +57,7 @@ ProcessConfig = pLogger
 }
 
 //------------------------------------------
-// uProcessWatch
+// uProcessWatch Config Block
 
 ProcessConfig = uProcessWatch
 {
@@ -70,9 +70,9 @@ ProcessConfig = uProcessWatch
 }
 
 //------------------------------------------
-// uSimMarine config block
+// uSimMarineV22 Config Block
 
-ProcessConfig = uSimMarine
+ProcessConfig = uSimMarineV22
 {
   AppTick  	= 4
   CommsTick	= 4
@@ -90,7 +90,7 @@ ProcessConfig = uSimMarine
 }
 
 //------------------------------------------
-// pHelmIvP config block
+// pHelmIvP Config Block
 
 ProcessConfig = pHelmIvP
 {
@@ -105,9 +105,9 @@ ProcessConfig = pHelmIvP
 }
 
 //------------------------------------------
-// pMarinePID config block
+// pMarinePIDV22 Config Block
 
-ProcessConfig = pMarinePID
+ProcessConfig = pMarinePIDV22
 {
   AppTick    = 20
   CommsTick  = 20
