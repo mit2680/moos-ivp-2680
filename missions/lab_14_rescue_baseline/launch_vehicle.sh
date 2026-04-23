@@ -157,10 +157,15 @@ if [ "${XMODE}" = "M300" ]; then
     IP_ADDR=`get_heron_info.sh --ip`
     FSEAT_IP=`get_heron_info.sh --fseat`
     VNAME=`get_heron_info.sh --name`
+    VTYPE=`get_heron_info.sh --type`
     if [ $? != 0 ]; then
 	echo "$ME: Problem getting Heron Info. Exit Code 2"
 	exit 2
     fi
+    if [ "${VTYPE}" = "blueboat" ]; then
+	XMODE="BBOAT"
+    fi
+    
 fi
      
 #--------------------------------------------------------------
