@@ -130,3 +130,187 @@ ProcessConfig = iM300Health
    FullBattThresh = 14.4 
 }
 
+<tag><iBackSeatBroker>
+//------------------------------------------------
+// iBackSeatBroker config block
+
+ProcessConfig = iBackSeatBroker
+{
+   AppTick   = 10
+   CommsTick = 10
+
+   //startup id
+   startup_id_repeat_frames = 20
+
+   // Backseat listens locally for front-seat telemetry.
+   // In missions this usually maps to the vehicle-side IP.
+   listen_ip   = $(IP_ADDR)
+   listen_port = 9445
+
+   // Backseat sends C2 to the front-seat endpoint.
+   // In missions this usually maps to FSEAT_IP.
+   tx_ip   = $(FSEAT_IP)
+   tx_port = 9444
+
+   // MOOS vars sent every Iterate tick if available
+   tx_vars = DESIRED_THRUST_L,DESIRED_THRUST_R,ALL_STOP
+
+   // Optional inbound remap: WIRE_VAR:MOOS_VAR
+   in_map = NAV_SPEED:NAV_SPEED_GPS, NAV_LAT:NAV_LAT_GPS, NAV_LONG:NAV_LONG_GPS
+
+   debug = false
+}
+
+<tag><pBB_Health>
+//------------------------------------------------
+// pBB_Health config block
+
+ProcessConfig = pBB_Health
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  // Staleness threshold (seconds)
+  stale_time = 3.0
+
+  // Battery thresholds
+  low_voltage_thresh = 13.0       // Volts - warn below this
+  high_current_thresh = 40.0      // Amps - warn above this
+
+  // Thermal thresholds (Celsius)
+  high_pi_temp_thresh = 80.0
+  high_internal_temp_thresh = 70.0
+
+  // GPS quality threshold
+  hdop_thresh = 2.5               // Warn if HDOP exceeds this
+
+  // RC mode circle radius (meters)
+  rc_circle_radius = 2.5          // Yellow ring around vehicle in RC mode
+
+  debug = false
+}
+
+<tag><pThrustMix>
+//------------------------------------------------
+// pThrustMix config block
+
+ProcessConfig = pThrustMix
+{
+  AppTick   = 16
+  CommsTick = 16
+
+  // Basic asymmetric mixing gains
+  k_inner_base = 1.5    // inside thruster reduction
+  k_outer_base = 1    // outside thruster increase
+
+  // Speed-dependent scaling (disabled by default)
+  enable_speed_scaling = false
+  speed_gain_points = 0.0,0.2, 0.25,0.3, 0.5,0.5, 0.75,0.75, 1.0,1.0, 20.0,1.0
+
+  // Yaw rate feedback (disabled by default)
+  enable_yaw_feedback = false
+  k_yaw_correction = 0.0
+  max_yaw_rate = 25.0         // deg/s
+  k_heading_to_rate = 1.0
+
+  // Variable names (default values shown)
+  desired_thrust_var = DESIRED_THRUST
+  desired_rudder_var = DESIRED_RUDDER
+  feedback_speed_var = NAV_SPEED
+  feedback_yaw_var = NAV_YAW_RATE
+  feedback_heading_var = NAV_HEADING
+  desired_heading_var = DESIRED_HEADING
+  desired_thrust_l_var = DESIRED_THRUST_L
+  desired_thrust_r_var = DESIRED_THRUST_R
+}
+
+<tag><pBB_DGPS_EKF>
+//------------------------------------------------
+// pBB_DGPS_EKF config block
+
+//------------------------------------------------
+// pBB_DGPS_EKF config block
+// Extended Kalman Filter for BlueBat navigation using
+// dual-antenna GPS heading and level-frame gyroscope.
+//
+// State: [x, y, phi, gamma, s]
+//   x, y   - position in local grid (m)
+//   phi    - true heading from DGPS + gyro fusion
+//   gamma  - course over ground
+//   s      - speed over ground (m/s)
+//
+// Also includes a drift estimator for current estimation.
+// When thrusters are off for drift_decay_period seconds,
+// the drift estimator runs to capture current velocities.
+
+ProcessConfig = pBB_DGPS_EKF
+{
+  AppTick   = 16
+  CommsTick = 16
+
+  // Input variable names
+  input_gps_state = GPS_STATE        // Bundled GPS from iUnicoreGPS
+  input_gyro_z    = GYRO_LVL_Z       // Level-frame gyro Z (rad/s)
+  input_thrust_l  = DESIRED_THRUST_L // Left thruster command (0-100)
+  input_thrust_r  = DESIRED_THRUST_R // Right thruster command (0-100)
+
+  // Output variable names (helm-facing)
+  output_nav_x       = NAV_X         // Filtered X position (m)
+  output_nav_y       = NAV_Y         // Filtered Y position (m)
+  output_nav_lat     = NAV_LAT       // Filtered latitude (deg, reverse geodesy)
+  output_nav_long    = NAV_LONG      // Filtered longitude (deg, reverse geodesy)
+  output_nav_heading = NAV_HEADING   // Filtered heading (deg, compass)
+  output_nav_speed   = NAV_SPEED     // Filtered speed (m/s)
+  output_nav_cog     = NAV_COG       // Filtered course over ground (deg)
+  output_nav_state   = NAV_STATE     // Bundled EKF state (like NODE_REPORT)
+
+  // Process noise (state drift uncertainty per sqrt(dt))
+  // Similar to pBB_EKF settings
+  sigma_x       = 0.1     // Position X process noise (m)
+  sigma_y       = 0.1     // Position Y process noise (m)
+  sigma_phi     = 0.01    // Heading process noise (rad) - small since gyro-driven
+  sigma_gamma   = 0.05    // COG process noise (rad)
+  sigma_s       = 0.1     // Speed process noise (m/s)
+
+  // Measurement noise (base values, scaled by GPS accuracy H_ACC/HDOP)
+  // GPS position: actual R = h_acc^2 from GPS_STATE
+  sigma_gps_pos = 1.0     // GPS position base noise (m) - scaled by H_ACC
+  sigma_gps_hdg = 3.0     // GPS heading base noise (deg) - scaled by heading_acc
+  sigma_gps_cog = 6.0     // GPS COG base noise (deg) - scaled by HDOP
+  sigma_gps_spd = 0.1     // GPS speed noise (m/s)
+
+  // Operational thresholds
+  speed_threshold          = 0.3   // Min speed for COG updates (m/s)
+  data_freshness_threshold = 5.0   // Max age for measurements (s)
+
+  //----------------------------------------------------------
+  // GPS Validity / Manual Override
+  //----------------------------------------------------------
+  // If GPS is stale or invalid, publish MOOS_MANUAL_OVERRIDE=true
+  // to prevent autonomous helm actions. NAV_* outputs are suppressed
+  // until GPS becomes valid again.
+
+  gps_stale_threshold     = 5.0    // Seconds before GPS considered stale (s)
+  enable_manual_override  = true   // Publish MOOS_MANUAL_OVERRIDE on GPS loss
+
+  //----------------------------------------------------------
+  // Drift Estimator Configuration
+  //----------------------------------------------------------
+  // When thrusters are below threshold for drift_decay_period,
+  // start estimating current drift from observed motion.
+  // Thrust comparison uses absolute value (handles reverse thrust).
+
+  drift_decay_period     = 20.0   // Seconds of low thrust before drift estimation (s)
+  drift_thrust_threshold = 1.0    // |Thrust| below this (0-100) is considered "off"
+
+  // Drift estimator noise (currents change slowly)
+  drift_sigma_vx   = 0.001  // Drift velocity X process noise (m/s per sqrt(s))
+  drift_sigma_vy   = 0.001  // Drift velocity Y process noise (m/s per sqrt(s))
+  drift_sigma_meas = 0.3    // Velocity measurement noise (m/s) - high for low-speed COG
+
+  // Drift visualization (VIEW_VECTOR for pMarineViewer)
+  enable_drift_seglist = true   // Publish drift VIEW_VECTOR (label shows vx,vy)
+  drift_vector_scale   = 10.0   // Scale factor: meters in visualization per m/s drift
+
+  debug = false
+}

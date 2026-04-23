@@ -33,6 +33,11 @@ Processconfig = ANTLER
 #elseifdef XMODE M300
   Run = iM300              @ NewConsole = false
   Run = iM300Health        @ NewConsole = false
+#elseifdef XMODE BBOAT
+  Run = iBackSeatBroker    @ NewConsole = false
+  Run = pBB_Health         @ NewConsole = false
+  Run = pBB_DGPS_EKF       @ NewConsole = false
+  Run = pThrustMix         @ NewConsole = false
 #endif
 
 	}
@@ -42,6 +47,11 @@ Processconfig = ANTLER
 #elseifdef XMODE M300
 #include plugs.moos <iM300>
 #include plugs.moos <iM300Health>
+#elseifdef XMODE BBOAT
+#include plugs.moos <iBackSeatBroker>
+#include plugs.moos <pBB_Health>
+#include plugs.moos <pBB_DGPS_EKF>
+#include plugs.moos <pThrustMix>
 #endif
 
 #include plugs.moos <pShare>
@@ -216,13 +226,21 @@ ProcessConfig = pMarinePIDV22
   // Yaw PID controller (Set for M300)
 #ifdef XMODE SIM
   yaw_pid_kp             = 1.5
-  yaw_pid_ki             = 0.5  
+  yaw_pid_ki             = 0.5
+  yaw_pid_kd             = 0.3 
+  yaw_pid_integral_limit = 0.3  
 #elseifdef XMODE M300
   yaw_pid_kp             = 0.9 
-  yaw_pid_ki             = 0.3 
-#endif
+  yaw_pid_ki             = 0.3
   yaw_pid_kd             = 0.3 
-  yaw_pid_integral_limit = 0.3 
+  yaw_pid_integral_limit = 0.3
+#elseifdef XMODE BBOAT
+  yaw_pid_kp             = 1.3 
+  yaw_pid_kd             = 0.0 
+  yaw_pid_ki             = 0.0
+  yaw_pid_integral_limit = 0.0
+#endif
+   
 
   // Speed PID controller
   speed_pid_kp           = 1.0
