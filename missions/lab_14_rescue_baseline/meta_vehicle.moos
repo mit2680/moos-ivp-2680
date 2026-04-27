@@ -40,7 +40,7 @@ Processconfig = ANTLER
   Run = pThrustMix         @ NewConsole = false
 #endif
 
-	}
+}
 
 #ifdef XMODE SIM
 #include plugs.moos <uSimMarineV22>

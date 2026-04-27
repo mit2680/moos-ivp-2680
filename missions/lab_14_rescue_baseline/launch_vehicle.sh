@@ -28,11 +28,10 @@ MOOS_PORT="9001"
 PSHARE_PORT="9201"
 SHORE_IP="localhost"
 SHORE_PSHARE="9200"
-MMOD=""
 
 VNAME="abe"
 COLOR="yellow"
-XMODE="M300"
+XMODE=""
 START_POS="x=0,y=0,heading=0"
 STOCK_SPD="1.4"
 MAX_SPD="2"
@@ -69,7 +68,6 @@ for ARGI; do
 	echo "  --pshare=<9201>        Veh pShare listen port  "
 	echo "  --shore=<localhost>    Shoreside IP to try     "
 	echo "  --shore_pshare=<9200>  Shoreside pShare port   "
-        echo "  --mmod=<mod>           Mission variation/mod   "
 	echo "                                                 "
 	echo "  --vname=<abe>          Veh name given          "
 	echo "  --color=<yellow>       Veh color given         "
@@ -115,8 +113,6 @@ for ARGI; do
         SHORE_IP="${ARGI#--shore=*}"
     elif [ "${ARGI:0:15}" = "--shore_pshare=" ]; then
         SHORE_PSHARE="${ARGI#--shore_pshare=*}"
-    elif [ "${ARGI:0:7}" = "--mmod=" ]; then
-        MMOD="${ARGI#--mmod=*}"
 
     elif [ "${ARGI:0:8}" = "--vname=" ]; then
         VNAME="${ARGI#--vname=*}"
@@ -149,23 +145,18 @@ for ARGI; do
 done
 
 #------------------------------------------------------------
-#  Part 4: If Heron hardware, set key info based on IP address
+#  Part 4: If not sim, set key info based on IP address
 #------------------------------------------------------------
-if [ "${XMODE}" = "M300" ]; then
-#    COLOR=`get_heron_info.sh --color --hint=$COLOR`
-    COLOR=`get_heron_info.sh --color`
-    IP_ADDR=`get_heron_info.sh --ip`
-    FSEAT_IP=`get_heron_info.sh --fseat`
-    VNAME=`get_heron_info.sh --name`
-    VTYPE=`get_heron_info.sh --type`
-    if [ $? != 0 ]; then
-	echo "$ME: Problem getting Heron Info. Exit Code 2"
+if [ "${XMODE}" = "" ]; then
+    COLOR=`get_robot_info.sh --color`
+    IP_ADDR=`get_robot_info.sh --ip`
+    FSEAT_IP=`get_robot_info.sh --fseat`
+    VNAME=`get_robot_info.sh --name`
+    XMODE=`get_robot_info.sh --TYPE`
+    if [ "$XMODE" = "" -o "$IP_ADDR" = "localhost" ]; then
+	echo "$ME: Problem getting Robot Info. Exit Code 2"
 	exit 2
     fi
-    if [ "${VTYPE}" = "blueboat" ]; then
-	XMODE="BBOAT"
-    fi
-    
 fi
      
 #--------------------------------------------------------------
@@ -197,7 +188,6 @@ if [ "${VERBOSE}" = "yes" ]; then
     echo "PSHARE_PORT =   [${PSHARE_PORT}]  "
     echo "SHORE_IP =      [${SHORE_IP}]     "
     echo "SHORE_PSHARE =  [${SHORE_PSHARE}] "
-    echo "MMOD =          [${MMOD}]         "
     echo "----------------------------------"
     echo "VNAME =         [${VNAME}]        "
     echo "COLOR =         [${COLOR}]        "
@@ -240,7 +230,6 @@ nsplug meta_vehicle.moos targ_$VNAME.moos $NSFLAGS WARP=$TIME_WARP \
        SHORE_PSHARE=$SHORE_PSHARE   VNAME=$VNAME         \
        COLOR=$COLOR                 XMODE=$XMODE         \
        START_POS=$START_POS         MAX_SPD=$MAX_SPD     \
-       MMOD=$MMOD                                        \
        VROLE=$VROLE                 TMATE=$TMATE         \
        PGR=$PGR                     VUSER=$VUSER         \
        BHV_DIR=$BHV_DIR                                  \
@@ -248,7 +237,7 @@ nsplug meta_vehicle.moos targ_$VNAME.moos $NSFLAGS WARP=$TIME_WARP \
 
 nsplug meta_vehicle.bhv targ_$VNAME.bhv $NSFLAGS         \
        START_POS=$START_POS         VNAME=$VNAME         \
-       STOCK_SPD=$STOCK_SPD         MMOD=$MMOD           \
+       STOCK_SPD=$STOCK_SPD                              \
        COLOR=$COLOR                 VROLE=$VROLE         \
        AUTO_LAUNCHED=$AUTO_LAUNCHED                      \
        TMATE=$TMATE

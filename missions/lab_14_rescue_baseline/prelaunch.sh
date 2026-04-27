@@ -11,7 +11,7 @@ vecho() { if [ "$VERBOSE" != "" ]; then echo "$ME: $1"; fi }
 on_exit() { echo; echo "$ME: Halting all apps"; kill -- -$$; }
 trap on_exit SIGINT
 
-# --raepo=mikerb --repo=tpaine
+# --repo=mikerb --repo=tpaine
 # For each repo:
 #   Confirm repo exists
 #   Confirm repo builds
