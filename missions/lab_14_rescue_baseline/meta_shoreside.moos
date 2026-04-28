@@ -241,6 +241,8 @@ ProcessConfig = pMarineViewer
   CommsTick  = 4
 
 	app_logging = true
+
+	extrap_policy = decay=off
 	
   //tiff_file            = forrest19.tif
   tiff_file            = MIT_SP.tif
