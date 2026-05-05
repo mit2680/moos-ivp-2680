@@ -259,7 +259,7 @@ do
     IVARGS+=" --tmate=${VMATES[$IXX]} "
 
     if [ "${COMPETE}" != "" ]; then
-	VAPP="${VAPPS[$IXX]}/bin/pGenRescue"
+	VAPP="${VAPPS[$IXX]}"
 	IVARGS+=" --pgr=${VAPP} "
 	vecho "VAPP:[${VAPP}]"
 	AWK6=`echo $VAPP | awk -F '/' '{print $6}'`
