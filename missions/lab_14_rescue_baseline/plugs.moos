@@ -227,9 +227,6 @@ ProcessConfig = pThrustMix
 <tag><pBB_DGPS_EKF>
 //------------------------------------------------
 // pBB_DGPS_EKF config block
-
-//------------------------------------------------
-// pBB_DGPS_EKF config block
 // Extended Kalman Filter for BlueBat navigation using
 // dual-antenna GPS heading and level-frame gyroscope.
 //
@@ -249,20 +246,15 @@ ProcessConfig = pBB_DGPS_EKF
   CommsTick = 16
 
   // Input variable names
-  input_gps_state = GPS_STATE        // Bundled GPS from iUnicoreGPS
-  input_gyro_z    = GYRO_LVL_Z       // Level-frame gyro Z (rad/s)
+  input_gps_state = FIX_STATE_DGNSS  // Time-bundled fix state from iUnicore
+  input_gyro_z    = GYRO_Z_LVL_IMU   // Level-frame gyro Z (rad/s)
   input_thrust_l  = DESIRED_THRUST_L // Left thruster command (0-100)
   input_thrust_r  = DESIRED_THRUST_R // Right thruster command (0-100)
 
-  // Output variable names (helm-facing)
-  output_nav_x       = NAV_X         // Filtered X position (m)
-  output_nav_y       = NAV_Y         // Filtered Y position (m)
-  output_nav_lat     = NAV_LAT       // Filtered latitude (deg, reverse geodesy)
-  output_nav_long    = NAV_LONG      // Filtered longitude (deg, reverse geodesy)
-  output_nav_heading = NAV_HEADING   // Filtered heading (deg, compass)
-  output_nav_speed   = NAV_SPEED     // Filtered speed (m/s)
-  output_nav_cog     = NAV_COG       // Filtered course over ground (deg)
-  output_nav_state   = NAV_STATE     // Bundled EKF state (like NODE_REPORT)
+  // Output suffix - empty publishes helm-facing bare names
+  // (NAV_X, NAV_Y, NAV_HEADING, etc.). Set non-empty to namespace
+  // outputs as <base>_<suffix> when running multiple state sources.
+  pub_suffix =
 
   // Process noise (state drift uncertainty per sqrt(dt))
   // Similar to pBB_EKF settings
@@ -273,7 +265,7 @@ ProcessConfig = pBB_DGPS_EKF
   sigma_s       = 0.1     // Speed process noise (m/s)
 
   // Measurement noise (base values, scaled by GPS accuracy H_ACC/HDOP)
-  // GPS position: actual R = h_acc^2 from GPS_STATE
+  // GPS position: actual R = h_acc^2 from FIX_STATE_DGNSS
   sigma_gps_pos = 1.0     // GPS position base noise (m) - scaled by H_ACC
   sigma_gps_hdg = 3.0     // GPS heading base noise (deg) - scaled by heading_acc
   sigma_gps_cog = 6.0     // GPS COG base noise (deg) - scaled by HDOP
