@@ -47,6 +47,7 @@ VUSER=""
 
 TMATE=""
 VROLE="rescue"
+BHV_DIR="/Users/mikerb/Research/moos-ivp-2680/lib/"
 
 #-------------------------------------------------------
 #  Part 2: Check for and handle command-line arguments
@@ -240,12 +241,19 @@ nsplug meta_vehicle.bhv targ_$VNAME.bhv $NSFLAGS         \
        STOCK_SPD=$STOCK_SPD                              \
        COLOR=$COLOR                 VROLE=$VROLE         \
        AUTO_LAUNCHED=$AUTO_LAUNCHED                      \
-       TMATE=$TMATE
+       TMATE=$TMATE                                      \
+       PGR=$PGR                     VUSER=$VUSER         \
+       BHV_DIR=$BHV_DIR                                  
 
 if [ "${JUST_MAKE}" = "yes" ]; then
     echo "$ME: Targ files made; exiting without launch."
     exit 0
 fi
+
+#------------------------------------------------------------
+#  Part 7B: 
+#------------------------------------------------------------
+export IVP_BEHAVIOR_DIRS=$BDIR
 
 #------------------------------------------------------------
 #  Part 8: Launch the vehicle mission
