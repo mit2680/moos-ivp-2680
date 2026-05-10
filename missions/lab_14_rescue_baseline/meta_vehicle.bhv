@@ -6,6 +6,8 @@ initialize   SURVEY = false
 initialize   AVOID  = true
 initialize   SURVEY = true
 initialize   STATION_KEEP = false
+initialize   RESCUE_APP=$(PGR=pGenRescue)
+initialize   BHV_DIR=$(BHV_DIR=Unset)
   
 set MODE = ACTIVE {
   DEPLOY = true
@@ -186,7 +188,7 @@ Behavior = BHV_OpRegionV24
   visual_hints = halt_edge_color = gray40
 	
 	save_dist = 3
-	halt_dist = 12
+	halt_dist = 15
 
 	recover_spd = 0.6
 }

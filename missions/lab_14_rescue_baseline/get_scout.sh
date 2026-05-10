@@ -32,34 +32,38 @@ done
 #-------------------------------------------------------
 ROOT_DIR="/Users/mikerb/Research/autotest/harnesses_2680"
 
-if [[ "${VAPP}" == *"cdembski"* ]]; then
-    echo "$ROOT_DIR/09-moos-ivp-mcschwar/lib/"
+if [[ "${VAPP}" == *"o_sully"* ]]; then
+    echo "$ROOT_DIR/14-moos-ivp-david355/lib"
 
-elif [[ "${VAPP}" == *"jwenger"* ]]; then
-    echo "$ROOT_DIR/13-moos-ivp-jcbrandt/lib/"
+elif [[ "${VAPP}" == *"amit2661"* ]]; then
+    echo "$ROOT_DIR/03-moos-ivp-bflynn74/lib"
 
-elif [[ "${VAPP}" == *"chthigpen"* ]]; then
-    echo "$ROOT_DIR/19-moos-ivp-hallsc83/lib/"
+elif [[ "${VAPP}" == *"thomasts"* ]]; then
+    echo "$ROOT_DIR/08-moos-ivp-mkier/lib"
+#    echo "$ROOT_DIR/20-moos-ivp-thomasts/lib"
 
-elif [[ "${VAPP}" == *"jcizu690"* ]]; then
-    echo "$ROOT_DIR/16-moos-ivp-harkm/lib/"
+elif [[ "${VAPP}" == *"hoffman3"* ]]; then
+    echo "$ROOT_DIR/06-moos-ivp-aaron24/lib"
 
-elif [[ "${VAPP}" == *"thoma904"* ]]; then
-    echo "$ROOT_DIR/05-moos-ivp-dmgilbe2/lib/"
+elif [[ "${VAPP}" == *"adamphan"* ]]; then
+    echo "$ROOT_DIR/18-moos-ivp-stoppani/lib"
 
-elif [[ "${VAPP}" == *"bruno752"* ]]; then
-    echo "$ROOT_DIR/18-moos-ivp-egajski/lib/"
+elif [[ "${VAPP}" == *"akhargis"* ]]; then
+    echo "$ROOT_DIR/01-moos-ivp-troyb528/lib"
 
-elif [[ "${VAPP}" == *"cschnorr"* ]]; then
-    echo "$ROOT_DIR/06-moos-ivp-cschnorr/lib/"
+elif [[ "${VAPP}" == *"jamie103"* ]]; then
+    echo "$ROOT_DIR/09-moos-ivp-jamie103/lib"
 
-elif [[ "${VAPP}" == *"ews2011"* ]]; then
-    echo "$ROOT_DIR/02-moos-ivp-ews2011/lib/"
+elif [[ "${VAPP}" == *"karanmah"* ]]; then
+    echo "$ROOT_DIR/17-moos-ivp-kshann/lib"
 
-elif [[ "${VAPP}" == *"bertucci"* ]]; then
-    echo "$ROOT_DIR/01-moos-ivp-rjkang17/lib/"
+elif [[ "${VAPP}" == *"orlo"* ]]; then
+    echo "$ROOT_DIR/12-moos-ivp-orlo/lib"
 
-elif [[ "${VAPP}" == *"adamc710"* ]]; then
-    echo "$ROOT_DIR/07-moos-ivp-adamc710/lib/"
+elif [[ "${VAPP}" == *"castroan"* ]]; then
+    echo "$ROOT_DIR/02-moos-ivp-castroan/lib"
+    
+elif [[ "${VAPP}" == *"aarjav"* ]]; then
+    echo "$ROOT_DIR/22-moos-ivp-aarjav/lib"
     
 fi
