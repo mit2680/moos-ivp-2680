@@ -6,8 +6,8 @@ initialize   SURVEY = false
 initialize   AVOID  = true
 initialize   SURVEY = true
 initialize   STATION_KEEP = false
-initialize   RESCUE_APP=$(PGR=pGenRescue)
-initialize   BHV_DIR=$(BHV_DIR=Unset)
+//initialize   RESCUE_APP=$(PGR=pGenRescue)
+//initialize   BHV_DIR=$(BHV_DIR=Unset)
   
 set MODE = ACTIVE {
   DEPLOY = true
