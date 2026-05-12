@@ -47,7 +47,7 @@ VUSER=""
 
 TMATE=""
 VROLE="rescue"
-BHV_DIR="/Users/mikerb/Research/moos-ivp-2680/lib/"
+#BHV_DIR="/Users/mikerb/Research/moos-ivp-2680/lib/"
 
 #-------------------------------------------------------
 #  Part 2: Check for and handle command-line arguments
@@ -253,7 +253,7 @@ fi
 #------------------------------------------------------------
 #  Part 7B: 
 #------------------------------------------------------------
-export IVP_BEHAVIOR_DIRS=$BDIR
+#export IVP_BEHAVIOR_DIRS=$BDIR
 
 #------------------------------------------------------------
 #  Part 8: Launch the vehicle mission
