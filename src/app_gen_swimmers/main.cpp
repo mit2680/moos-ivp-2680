@@ -67,6 +67,14 @@ int main(int argc, char *argv[])
       string poly = "60,10:-75.5402,-54.2561:-36.9866,-135.58:98.5536,-71.3241";
       handled = generator.addPolygon(poly);
     }
+    else if((argi == "--athens1") || (argi == "-a1")) {
+      string poly = "204.7,79.4:213.5,63.4:216.1,39.6:127.4,-3.6:112.5,72.6";
+      handled = generator.addPolygon(poly);
+    }
+    else if((argi == "--athens2") || (argi == "-a2")) {
+      string poly = "117.1,74.6:123.4,14.9:222.9,25.4:216.6,85.1";
+      handled = generator.addPolygon(poly);
+    }
     
     if(!handled) {
       cout << "Unhandled arg: " << argi << endl;
