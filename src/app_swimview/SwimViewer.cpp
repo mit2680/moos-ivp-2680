@@ -85,7 +85,11 @@ void SwimViewer::draw()
 {
   MarineViewer::draw();
   drawGeoObjects();
-  drawGeneralRegions();
+  if(m_location == "athens")
+    drawGeneralRegionsAthens();
+  else
+    drawGeneralRegionsMIT();
+    
   drawSwimSet(m_swimsets[m_curr_swimset]);
 
   // Draw pan/zoom right on the screen
@@ -139,9 +143,9 @@ void SwimViewer::toggleDrawMarkerLabels()
 
 
 //-------------------------------------------------------------
-// Procedure: drawGeneralRegions()
+// Procedure: drawGeneralRegionsMIT()
 
-void SwimViewer::drawGeneralRegions()
+void SwimViewer::drawGeneralRegionsMIT()
 {
   string pav60 = "pts={60,10:-30.3602,-32.8374:-4.6578,-87.0535:85.7024,-44.2161}";
   string pav90 = "pts={60,10:-75.5402,-54.2561:-36.9866,-135.58:98.5536,-71.3241}";
@@ -165,6 +169,49 @@ void SwimViewer::drawGeneralRegions()
   
   drawPolygon(region1);
   drawPolygon(region2);
+}
+
+//-------------------------------------------------------------
+// Procedure: drawGeneralRegionsAthens()
+
+void SwimViewer::drawGeneralRegionsAthens()
+{
+  string a1 = "28.4,16.7:35.4,28.2:11,42.5:3.6,30.8";
+  string a2 = "28.4,16.7:38.4,33.4:27.6,52.2:-0.4,58:-12.3,40.1";
+  string a3 = "28.4,16.7:38.4,33.4:39,56:21.2,67.8:-7.8,67.9:-25.5,47.5";
+  string a4 = "28.4,16.7:38.4,33.4:42.8,61.5:29,89.1:-9,91.5:-34.9,52.8";
+  
+  XYPolygon region1 = string2Poly(a1);
+  XYPolygon region2 = string2Poly(a2);
+  XYPolygon region3 = string2Poly(a3);
+  XYPolygon region4 = string2Poly(a4);
+
+  region1.set_label("a1");
+  region2.set_label("a2");
+  region3.set_label("a3");
+  region4.set_label("a4");
+
+  region1.set_edge_color("gray50");
+  region2.set_edge_color("gray50");
+  region3.set_edge_color("gray50");
+  region4.set_edge_color("gray50");
+
+  region1.set_label_color("off");
+  region2.set_label_color("off");
+  region3.set_label_color("off");
+  region4.set_label_color("off");
+
+  if(!m_draw_gen_regions) {
+    region1.set_active(false);
+    region2.set_active(false);
+    region3.set_active(false);
+    region4.set_active(false);
+  }
+  
+  drawPolygon(region1);
+  drawPolygon(region2);
+  drawPolygon(region3);
+  drawPolygon(region4);
 }
 
 //-------------------------------------------------------------
@@ -340,7 +387,7 @@ void SwimViewer::drawSwimSet(SwimmerSet swimset)
   XYMarker marker;
   marker.set_color("primary_color", mcolor);
   marker.set_transparency(0.4);
-  marker.set_width(3);
+  marker.set_width(1.5);
  
   if(m_draw_mlabels == "name")
     marker.set_label_color("gray70");

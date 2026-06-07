@@ -68,11 +68,19 @@ int main(int argc, char *argv[])
       handled = generator.addPolygon(poly);
     }
     else if((argi == "--athens1") || (argi == "-a1")) {
-      string poly = "204.7,79.4:213.5,63.4:216.1,39.6:127.4,-3.6:112.5,72.6";
+      string poly = "28.4,16.7:35.4,28.2:11,42.5:3.6,30.8";
       handled = generator.addPolygon(poly);
     }
     else if((argi == "--athens2") || (argi == "-a2")) {
-      string poly = "117.1,74.6:123.4,14.9:222.9,25.4:216.6,85.1";
+      string poly = "28.4,16.7:38.4,33.4:27.6,52.2:-0.4,58:-12.3,40.1";
+      handled = generator.addPolygon(poly);
+    }
+    else if((argi == "--athens3") || (argi == "-a3")) {
+      string poly = "28.4,16.7:38.4,33.4:39,56:21.2,67.8:-7.8,67.9:-25.5,47.5";
+      handled = generator.addPolygon(poly);
+    }
+    else if((argi == "--athens4") || (argi == "-a4")) {
+      string poly = "28.4,16.7:38.4,33.4:39,56:21.2,67.8:-4.9,71.4:-25,47.7";
       handled = generator.addPolygon(poly);
     }
     

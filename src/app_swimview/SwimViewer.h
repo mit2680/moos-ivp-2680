@@ -43,7 +43,8 @@ class SwimViewer : public MarineViewer
   
   // Pure virtual that need to be defined
   void  modColorScheme() {};
-
+  void  setLocation(std::string s) {m_location=s;}
+  
   bool  readSwimFile(std::string);
   bool  readGeomFile(std::string);
   
@@ -71,7 +72,8 @@ class SwimViewer : public MarineViewer
   void toggleDrawGenRegions()   {m_draw_gen_regions=!m_draw_gen_regions;}
   void toggleDrawMarkerLabels();
   
-  void drawGeneralRegions();
+  void drawGeneralRegionsMIT();
+  void drawGeneralRegionsAthens();
   void drawGeoObjects();
 
   unsigned int size() const {return(m_swimsets.size());}
@@ -96,6 +98,8 @@ private: // state vars
   std::string m_draw_mlabels;
   
   VPlug_GeoShapes  m_geoshapes;
+
+  std::string m_location;
 };
 
 #endif 
