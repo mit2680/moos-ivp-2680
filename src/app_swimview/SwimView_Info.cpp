@@ -56,8 +56,13 @@ void showHelpAndExit()
   cout << "  --version,-v                                     " << endl;
   cout << "      Display the release version of swimview      " << endl;
   cout << "                                                   " << endl;
+  cout << "   mit,charles      For Pavlab oparea              " << endl;
+  cout << "   forrest-lake,fl  For Forrest Lake oparea        " << endl;
+  cout << "   --athens,-a      For Athens oparea              " << endl;
+  cout << "                                                   " << endl;
   cout << "Example:                                           " << endl;
   cout << "  swimview swim_file1.txt swim_file2.txt           " << endl;
+  cout << "  swimview swim_file1.txt --athens                 " << endl;
   exit(0);
 }
 
