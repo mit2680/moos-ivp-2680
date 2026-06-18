@@ -55,28 +55,32 @@ ENDIF()
 #============================================================================
 # Add the LAB Hazard Search Modules (if present)
 #============================================================================
-IF( EXISTS ${CMAKE_SOURCE_DIR}/src/lib_ufld_hazards )
-  ADD_SUBDIRECTORY(lib_ufld_hazards)
-ENDIF()
+#IF( EXISTS ${CMAKE_SOURCE_DIR}/src/lib_ufld_hazards )
+#  ADD_SUBDIRECTORY(lib_ufld_hazards)
+#ENDIF()
 
-IF( EXISTS ${CMAKE_SOURCE_DIR}/src/app_gen_hazards )
-  ADD_SUBDIRECTORY(app_gen_hazards)
-ENDIF()
+#IF( EXISTS ${CMAKE_SOURCE_DIR}/src/app_gen_hazards )
+#  ADD_SUBDIRECTORY(app_gen_hazards)
+#ENDIF()
 
-IF( EXISTS ${CMAKE_SOURCE_DIR}/src/uFldHazardMetric )
-  ADD_SUBDIRECTORY(uFldHazardMetric)
-ENDIF()
+#IF( EXISTS ${CMAKE_SOURCE_DIR}/src/uFldHazardMetric )
+#  ADD_SUBDIRECTORY(uFldHazardMetric)
+#ENDIF()
 
-IF( EXISTS ${CMAKE_SOURCE_DIR}/src/uFldHazardMgr )
-  ADD_SUBDIRECTORY(uFldHazardMgr)
-ENDIF()
+#IF( EXISTS ${CMAKE_SOURCE_DIR}/src/uFldHazardMgr )
+#  ADD_SUBDIRECTORY(uFldHazardMgr)
+#ENDIF()
 
-IF( EXISTS ${CMAKE_SOURCE_DIR}/src/uFldHazardSensor )
-  ADD_SUBDIRECTORY(uFldHazardSensor)
-ENDIF()
+#IF( EXISTS ${CMAKE_SOURCE_DIR}/src/uFldHazardSensor )
+#  ADD_SUBDIRECTORY(uFldHazardSensor)
+#ENDIF()
 
 IF( EXISTS ${CMAKE_SOURCE_DIR}/src/pPointAssignEval )
   ADD_SUBDIRECTORY(pPointAssignEval)
+ENDIF()
+
+IF( EXISTS ${CMAKE_SOURCE_DIR}/src/pGenRescue )
+  ADD_SUBDIRECTORY(pGenRescue)
 ENDIF()
 
 #============================================================================

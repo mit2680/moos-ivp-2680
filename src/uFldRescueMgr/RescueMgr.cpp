@@ -1122,7 +1122,7 @@ void RescueMgr::postSwimMarker(string sname)
   marker.set_type("triangle");
   marker.set_vx(swimmer.getCurrX());
   marker.set_vy(swimmer.getCurrY());
-  marker.set_width(3);
+  marker.set_width(2);
   marker.set_edge_color("green");
   marker.set_transparency(0.3);
   
