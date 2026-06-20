@@ -82,21 +82,15 @@ void showHelpAndExit()
   cout << "  --mit                                                " << endl;
   cout << "      Short for:                                       " << endl;
   cout << "      --poly=\"60,10:-30.36,-32.84:-4.66,-87.05:85.70,-44.22\" " << endl;
-  cout << "  --athens1, -a1                                       " << endl;
+  cout << "  --athens, -a                                         " << endl;
   cout << "      Short for:                                       " << endl;
-  cout << "      --poly=\"108,64:108,40:26,2:-18,18:-18,64:8,82:44,88:80,78\" " << endl;
-  cout << "  --athens2, -a2                                       " << endl;
-  cout << "      Short for:                                       " << endl;
-  cout << "      --poly=\"98.7,80.4:107.5,64.4:110.1,40.6:21.4,-2.6:6.5,73.6\" " << endl;
-  cout << "  --athens3, -a3                                       " << endl;
-  cout << "      Short for:                                       " << endl;
-  cout << "      --poly=\"5.1,74.6:11.4,14.9:110.9,25.4:104.6,85.1\" " << endl;
+  cout << "      --poly=\"-215,-2:-76,-86:-16,6\"                 " << endl;
   cout << "                                                       " << endl;
   cout << "Example:                                               " << endl;
   cout << "  gen_swimmers --mit_big --swimmers=4 --unreg=6 --buf=5" << endl;
   cout << "  gen_swimmers --mit_small --swimmers=4 --buf=5        " << endl;
-  cout << "  gen_swimmers --athens1 --swimmers=9 --buf=5          " << endl;
-  cout << "  gen_swimmers --athens2 --swimmers=19 --buf=5         " << endl;
+  cout << "  gen_swimmers --athens --swimmers=9 --buf=5           " << endl;
+  cout << "  gen_swimmers --athens --swimmers=19 --unreg=5 --buf=5 " << endl;
   exit(0);
 }
 
