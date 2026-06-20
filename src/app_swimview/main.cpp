@@ -53,14 +53,16 @@ int main(int argc, char *argv[])
     else if((argi == "forrest-lake") || (argi=="fl"))
       tif_file = "forrest19.tif";
     else if((argi == "--athens") || (argi=="-a")) {
-      tif_file = "athens_hgoo_20.tif";
+      tif_file = "moos_georef_20260616_081356.tif";
       gui->m_swim_viewer->setLocation("athens");
       gui->m_swim_viewer->setZoom(0.960);
-      gui->m_swim_viewer->setParam("set_pan_x", -620);
-      gui->m_swim_viewer->setParam("set_pan_y", -260);
+      gui->m_swim_viewer->setParam("set_pan_x", -300);
+      gui->m_swim_viewer->setParam("set_pan_y", -120);
     }
     else if(strEnds(argi, ".txt"))
       handled = gui->m_swim_viewer->readSwimFile(argi);      
+    else if(strEnds(argi, ".tif"))
+      tif_file = argi;
     else 
       gui->m_swim_viewer->readGeomFile(argi);      
     
