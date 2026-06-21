@@ -38,7 +38,7 @@ class SwimFldGenerator
   bool   setUnregAmt(std::string);
   bool   setBufferDist(std::string);
 
-  bool   addPolygon(std::string s) {return(m_generator.addPolygon(s));}
+  bool   addPolygon(std::string, double pct=1);
 
   bool   generate();
   bool   generate_aux(double=1);
@@ -47,6 +47,7 @@ class SwimFldGenerator
   unsigned int m_swimmer_amt;
   unsigned int m_unreg_amt;
   double       m_buffer_dist;
+  XYPolygon    m_region;
 
  protected: // State variables
   XYFieldGenerator  m_generator;

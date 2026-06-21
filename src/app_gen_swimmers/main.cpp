@@ -69,7 +69,8 @@ int main(int argc, char *argv[])
     }
     else if((argi == "--athens") || (argi == "-a")) {
       string poly = "-215,-2 :-76,-86 :-16,6";
-      handled = generator.addPolygon(poly);
+      // In athens we want to shrink poly by 90pct so arg=-0.1
+      handled = generator.addPolygon(poly, -0.1);
     }
     if(!handled) {
       cout << "Unhandled arg: " << argi << endl;
@@ -77,6 +78,8 @@ int main(int argc, char *argv[])
     }
   }
 
+  
+  
   cout << "// " << arg_summary << endl;
 
   generator.generate();

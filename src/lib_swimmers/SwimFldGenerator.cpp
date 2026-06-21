@@ -65,6 +65,22 @@ bool SwimFldGenerator::setBufferDist(string str)
 }
 
 //---------------------------------------------------------
+// Procedure: addPolygon()
+
+bool SwimFldGenerator::addPolygon(string poly, double pct)
+{
+  m_region = string2Poly(poly);
+
+  if(pct != 1) {
+    XYPolygon poly_pct = m_region;
+    poly_pct.grow_by_pct(pct);
+    poly = poly_pct.get_spec(4);
+  }
+    
+  return(m_generator.addPolygon(poly));
+}
+
+//---------------------------------------------------------
 // Procedure: generate()
 
 bool SwimFldGenerator::generate()
@@ -92,9 +108,6 @@ bool SwimFldGenerator::generate()
   seed = (seed*pid)%999999;
   srand(seed);
     
-
-
-  
   m_generator.setSnap(1);
   if(total > 50)
     m_generator.setSnap(0.1);  
@@ -116,7 +129,8 @@ bool SwimFldGenerator::generate()
   cout << doubleToString(nearest,2) << endl;
   for(unsigned int i=0; i<m_generator.size(); i++) {
     string poly_spec = m_generator.getPolygon(i).get_spec(4);
-    cout << "poly = " << poly_spec << endl;
+    //cout << "poly = " << poly_spec << endl;
+    cout << "poly = " << m_region.get_spec() << endl;
   }
   
   // Output any and all swimmers (not unregistered swimmers)
